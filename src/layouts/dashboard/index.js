@@ -11,7 +11,6 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
-import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 import GradientLineChart from "examples/Charts/LineCharts/GradientLineChart";
 
 // Soft UI Dashboard React base styles
@@ -28,21 +27,7 @@ import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
 import gradientLineChartData from "layouts/dashboard/data/gradientLineChartData";
 import { useSelector } from "react-redux";
 import { forwardRef, useEffect, useState } from "react";
-import { isPast, isToday } from "date-fns";
-import Loans from "./components/Loans";
-import formatCurrency from "utils/formatCurrency";
-import {
-  AppBar,
-  Button,
-  Dialog,
-  IconButton,
-  List,
-  Slide,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { Close } from "@mui/icons-material";
-import InfoDialog from "./components/info_dialog";
+import { Slide } from "@mui/material";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -50,46 +35,42 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 function Dashboard() {
   const { size } = typography;
-  const { chart, items } = reportsBarChartData;
-  const [pending, setPending] = useState([]);
-  const [approved, setApproved] = useState([]);
-  const [denied, setDenied] = useState([]);
-  const [disbursed, setDisbursed] = useState([]);
-  const [due, setDue] = useState([]);
-  const [overdue, setOverdue] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [totalRevenue, setTotalRevenue] = useState(0);
-  const { loans, recentLoans } = useSelector((state) => state.loan);
-  const [title, setTitle] = useState("");
-  const [lData, setLData] = useState([]);
+  // const { chart, items } = reportsBarChartData;
+  const [allJobs, setAllJob] = useState([]);
+  const [availableJobs, setAvailableJob] = useState([]);
+  const [applications, setApplications] = useState([]);
+  const [acceptedApplications, setAcceptedApplications] = useState([]);
+  const [professionals, setProfessionals] = useState([]);
+  const [recruiters, setRecruiters] = useState([]);
+
+  const { jobs, jobApplications } = useSelector((state) => state.job);
+  const { users } = useSelector((state) => state.user);
+  // const [title, setTitle] = useState("");
+  // const [lData, setLData] = useState([]);
 
   useEffect(() => {
-    if (loans) {
-      const currentDate = new Date();
-      let arr = loans?.docs?.filter((item) => item?.status === "pending");
-      let arr2 = loans?.docs?.filter((item) => item?.status === "approved");
-      let arr3 = loans?.docs?.filter((item) => item?.status === "credited");
-      let arr4 = loans?.docs?.filter((item) => item?.status === "denied");
-      let arr5 = loans?.docs?.filter((item) => item?.status === "settled");
-      setPending(arr);
-      setApproved(arr2);
-      setDisbursed(arr3);
-      setDenied(arr4);
-
-      let today = loans?.docs?.filter((item) => isToday(new Date(item?.dueDate)));
-      let over = loans?.docs?.filter((item) => isPast(new Date(item?.dueDate)));
-      setDue(today);
-      setOverdue(over);
-
-      let revenue = 0;
-      let rev = arr5?.forEach((element) => {
-        // if (element) {
-        revenue = revenue + element?.interestAmount;
-        // }
-        setTotalRevenue(revenue);
-      });
+    if (jobs) {
+      let arr = jobs?.docs;
+      let arr2 = jobs?.docs?.filter((item) => item?.jobStatus === "accepting");
+      setAllJob(arr);
+      setAvailableJob(arr2);
     }
-  }, [loans]);
+
+    if (jobApplications) {
+      let arr = jobApplications?.docs;
+      let arr2 = jobApplications?.docs?.filter((item) => item?.status === "accepted");
+      setApplications(arr);
+      setAcceptedApplications(arr2);
+    }
+
+    if (users) {
+      let arr = users?.docs?.filter((item) => item?.accountType.toLowerCase() === "freelancer");
+      let arr2 = users?.docs?.filter((item) => item?.accountType.toLowerCase() === "recruiter");
+      setProfessionals(arr);
+      setRecruiters(arr2);
+    }
+
+  }, [jobs, jobApplications, users]);
 
   return (
     <DashboardLayout>
@@ -99,10 +80,10 @@ function Dashboard() {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6} md={4}>
               <MiniStatisticsCard
-                title={{ text: "total revenue" }}
-                count={`${formatCurrency(totalRevenue)}`}
-                percentage={{ color: "success", text: "in revenue" }}
-                icon={{ color: "error", component: "paid" }}
+                title={{ text: "total jobs" }}
+                count={allJobs?.length}
+                percentage={{ color: "info", text: "jobs posted" }}
+                icon={{ color: "info", component: "paid" }}
               />
             </Grid>
             <Grid
@@ -110,17 +91,17 @@ function Dashboard() {
               xs={12}
               sm={6}
               md={4}
-              onClick={() => {
-                setLData(disbursed);
-                setOpen(true);
-                setTitle("All Disbursed Loans");
-              }}
+              // onClick={() => {
+              //   setLData(disbursed);
+              //   setOpen(true);
+              //   setTitle("All Disbursed Loans");
+              // }}
             >
               <MiniStatisticsCard
-                title={{ text: "Disbursed loans" }}
-                count={disbursed?.length}
-                percentage={{ color: "info", text: "for disbursement" }}
-                icon={{ color: "error", component: "price_check" }}
+                title={{ text: "Available Jobs" }}
+                count={availableJobs?.length}
+                percentage={{ color: "info", text: "available for application" }}
+                icon={{ color: "info", component: "price_check" }}
               />
             </Grid>
             <Grid
@@ -128,17 +109,17 @@ function Dashboard() {
               xs={12}
               sm={6}
               md={4}
-              onClick={() => {
-                setLData(approved);
-                setOpen(true);
-                setTitle("All Approved Loans");
-              }}
+              // onClick={() => {
+              //   setLData(approved);
+              //   setOpen(true);
+              //   setTitle("All Approved Loans");
+              // }}
             >
               <MiniStatisticsCard
-                title={{ text: "Approved loans" }}
-                count={approved?.length}
-                percentage={{ color: "success", text: "for disbursement" }}
-                icon={{ color: "error", component: "credit_score" }}
+                title={{ text: "Job Applications" }}
+                count={applications?.length}
+                percentage={{ color: "info", text: "submitted applications" }}
+                icon={{ color: "info", component: "credit_score" }}
               />
             </Grid>
           </Grid>
@@ -151,18 +132,18 @@ function Dashboard() {
               xs={12}
               sm={6}
               md={4}
-              onClick={() => {
-                setLData(pending);
-                setOpen(true);
-                setTitle("All Pending Loans");
-              }}
+              // onClick={() => {
+              //   setLData(pending);
+              //   setOpen(true);
+              //   setTitle("All Pending Loans");
+              // }}
             >
               <MiniStatisticsCard
-                title={{ text: "pending loans" }}
-                count={pending?.length}
-                percentage={{ color: "warning", text: "pending" }}
+                title={{ text: "Accepted applications" }}
+                count={acceptedApplications?.length}
+                percentage={{ color: "info", text: "accepted applications" }}
                 icon={{
-                  color: "error",
+                  color: "info",
                   component: "hourglass_bottom",
                 }}
               />
@@ -173,18 +154,18 @@ function Dashboard() {
               xs={12}
               sm={6}
               md={4}
-              onClick={() => {
-                setLData(due);
-                setOpen(true);
-                setTitle("All Due Loans");
-              }}
+              // onClick={() => {
+              //   setLData(due);
+              //   setOpen(true);
+              //   setTitle("All Due Loans");
+              // }}
             >
               <MiniStatisticsCard
-                title={{ text: "due loans" }}
-                count={due?.length}
-                percentage={{ color: "warning", text: "due for repayment" }}
+                title={{ text: "Professionals" }}
+                count={professionals?.length}
+                percentage={{ color: "info", text: "professionals " }}
                 icon={{
-                  color: "error",
+                  color: "info",
                   component: "access_alarm",
                 }}
               />
@@ -195,20 +176,20 @@ function Dashboard() {
               xs={12}
               sm={6}
               md={4}
-              onClick={() => {
-                setLData(overdue);
-                setOpen(true);
-                setTitle("All Overdue Loans");
-              }}
+              // onClick={() => {
+              //   setLData(overdue);
+              //   setOpen(true);
+              //   setTitle("All Overdue Loans");
+              // }}
             >
               <MiniStatisticsCard
-                title={{ text: "overdue loans" }}
-                count={overdue?.length}
-                percentage={{ color: "error", text: "to be repaid" }}
-                icon={{ color: "error", component: "fmd_bad" }}
+                title={{ text: "Recruiters" }}
+                count={recruiters?.length}
+                percentage={{ color: "info", text: "recruiters/employers" }}
+                icon={{ color: "info", component: "fmd_bad" }}
               />
             </Grid>
-            <Grid
+            {/* <Grid
               item
               xs={12}
               sm={6}
@@ -228,13 +209,13 @@ function Dashboard() {
                   component: "error",
                 }}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </SoftBox>
 
         <SoftBox mb={3}>
           <Grid container spacing={3}>
-            <Grid item xs={12} lg={5}>
+            {/* <Grid item xs={12} lg={5}>
               <ReportsBarChart
                 title="active users"
                 description={
@@ -245,32 +226,46 @@ function Dashboard() {
                 chart={chart}
                 items={items}
               />
-            </Grid>
-            <Grid item xs={12} lg={7}>
+            </Grid> */}
+            <Grid item xs={12} lg={12}>
               <GradientLineChart
-                title="Sales Overview"
+                title="Revenue Overview"
                 description={
                   <SoftBox display="flex" alignItems="center">
-                    <SoftBox fontSize={size.lg} color="success" mb={0.3} mr={0.5} lineHeight={0}>
+                    <SoftBox
+                      fontSize={size.lg}
+                      color="success"
+                      mb={0.3}
+                      mr={0.5}
+                      lineHeight={0}
+                    >
                       <Icon className="font-bold">arrow_upward</Icon>
                     </SoftBox>
-                    <SoftTypography variant="button" color="text" fontWeight="medium">
+                    <SoftTypography
+                      variant="button"
+                      color="text"
+                      fontWeight="medium"
+                    >
                       4% more{" "}
-                      <SoftTypography variant="button" color="text" fontWeight="regular">
-                        in 2021
+                      <SoftTypography
+                        variant="button"
+                        color="text"
+                        fontWeight="regular"
+                      >
+                        in May
                       </SoftTypography>
                     </SoftTypography>
                   </SoftBox>
-                }
+                } 
                 height="20.25rem"
                 chart={gradientLineChartData}
               />
             </Grid>
           </Grid>
         </SoftBox>
-        <Grid container spacing={3}>
+        <Grid container spacing={3}> 
           <Grid item xs={12} md={12} lg={12}>
-            <Loans recentLoans={recentLoans} />
+            {/* <Loans recentLoans={recentLoans} /> */}
           </Grid>
           {/* <Grid item xs={12} md={6} lg={4}>
             <OrderOverview />
@@ -278,14 +273,14 @@ function Dashboard() {
         </Grid>
       </SoftBox>
 
-      <Dialog
+      {/* <Dialog
         fullScreen
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
       >
         <InfoDialog title={title} setOpen={setOpen} data={lData} />
-      </Dialog>
+      </Dialog> */}
       <Footer />
     </DashboardLayout>
   );

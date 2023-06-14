@@ -37,6 +37,7 @@ import SoftButton from "components/SoftButton";
 import { useFormik } from "formik";
 import NumericFormatCustom from "utils/num_format";
 import useLoan from "hooks/loans";
+import { isAfter, isBefore, isEqual, parseISO } from "date-fns";
 
 export default function LoansTable() {
   const { loans } = useSelector((state) => state.loan);
@@ -201,7 +202,7 @@ export default function LoansTable() {
   });
 
   const clearFilter = () => {
-    setFilteredUsers(loans?.docs);
+    setFilteredLoans(loans?.docs);
     setCount(loans?.totalDocs);
   };
 

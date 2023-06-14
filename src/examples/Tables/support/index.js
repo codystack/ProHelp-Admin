@@ -11,6 +11,7 @@ import {
 import CustomNoRowsOverlay from "../../../components/no_data/custom_no_row";
 import ActionButton from "./action";
 import { useSelector } from "react-redux";
+import { Avatar } from "@mui/material";
 
 function CustomToolbar() {
   return (
@@ -26,13 +27,37 @@ function CustomToolbar() {
 export default function SupportTable() {
   const columns = [
     {
-      field: "ticketId",
-      headerName: "Ticket ID",
-      width: 150,
+      field: "image",
+      headerName: "Photo",
+      width: 80,
+      renderCell: (params) => (
+        <Avatar src={params?.row?.user?.image} variant="circular" />
+      ),
     },
     {
-      field: "subject",
-      headerName: "Subject",
+      field: "fullname",
+      headerName: "Fullname",
+      width: 135,
+      renderCell: (params) => {
+        return <p>{params.row?.user?.fullname}</p>;
+      },
+    },
+    {
+      field: "email",
+      headerName: "Email address",
+      width: 140,
+      renderCell: (params) => {
+        return <p>{params.row?.user?.email}</p>;
+      },
+    },
+    {
+      field: "ticketId",
+      headerName: "Ticket ID",
+      width: 110,
+    },
+    {
+      field: "purpose",
+      headerName: "Purpose",
       width: 320,
     },
     {

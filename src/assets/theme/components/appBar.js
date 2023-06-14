@@ -15,7 +15,7 @@ Coded by Stanley Nyekpeye (stanleynyekpeye@gmail.com)
 
 const appBar = {
   defaultProps: {
-    color: "transparent",
+    color: "#0066F5",
   },
 
   styleOverrides: {

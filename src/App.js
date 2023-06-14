@@ -28,50 +28,50 @@ import createCache from "@emotion/cache";
 import routes from "routes";
 
 // Soft UI Dashboard React contexts
-import { useSoftUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import {
+  useSoftUIController,
+  setMiniSidenav,
+  setOpenConfigurator,
+} from "context";
 
 import { useDispatch, useSelector } from "react-redux";
 
 // Images
-import brand from "assets/images/fast-logos/logolight.svg";
+import brand from "assets/images/fast-logos/playstore.png";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
 import useProfile from "hooks/profile";
 import { setAuth, setProfile } from "./redux/slices/profile";
-import useLoan from "hooks/loans";
-import { setLoans, setRecentLoans, setLoanRequests } from "redux/slices/loans";
-import { setTransaction } from "redux/slices/transactions";
 import { setSupport } from "redux/slices/support";
 import { setUsers } from "redux/slices/user";
 import { setAdmins } from "redux/slices/admin";
 import { Backdrop, CircularProgress } from "@mui/material";
-import useTransaction from "hooks/transactions";
 import useSupport from "hooks/support";
 import useUsers from "hooks/users";
 import useAdmins from "hooks/admins";
-import useCompany from "hooks/useCompany";
-import { setCompanies } from "redux/slices/company";
-import useSettings from "hooks/useSettings";
+import useSettings from "./hooks/useSettings";
 import { setSettings } from "redux/slices/settings";
-import useRequest from "hooks/useRequest";
-import useCard from "hooks/useCard";
-import { setDebitCards } from "redux/slices/cards";
+import useJobs from "./hooks/useJob";
+import { setJobs } from "redux/slices/jobs";
+import useJobApplications from "hooks/useJobApplication";
+import { setJobApplications } from "redux/slices/jobs";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
-  const { miniSidenav, direction, layout, openConfigurator, sidenavColor } = controller;
+  const { miniSidenav, direction, layout, openConfigurator, sidenavColor } =
+    controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
 
   const { data, mutate } = useProfile();
-  const { data: requestData,  } = useRequest(1);
-  const { data: cardData,  } = useCard();
-  const { data: companyData, mutateCompany } = useCompany();
-  const { data: settingsData, mutateSettings } = useSettings();
-  const { data: loanData, mutate: loanMutate } = useLoan(1);
-  const { data: transactionData, mutate: transactionMutate } = useTransaction(1);
+  const { data: jobData } = useJobs(1);
+  // const { data: adminsData,  } = useAdmins();
+  const { data: jobApplicationData } = useJobApplications();
+  // const { data: settingsData, mutateSettings } = useSettings();
+  // const { data: loanData, mutate: loanMutate } = useLoan(1);
+  // const { data: transactionData, mutate: transactionMutate } = useTransaction(1);
   const { data: supportData, mutate: supportMutate } = useSupport();
   const { data: usersData, mutate: usersMutate } = useUsers(1);
   const { data: adminsData, mutate: adminsMutate } = useAdmins();
@@ -98,37 +98,22 @@ export default function App() {
       dispatcher(setProfile(data));
     }
 
-    if (settingsData) {
-      dispatcher(setSettings(settingsData?.docs[0]));
-    }
-
-    if (cardData) {
-      dispatcher(setDebitCards(cardData));
-    }
-
-  }, [data, settingsData, cardData]);
+    // if (settingsData) {
+    //   dispatcher(setSettings(settingsData?.docs[0]));
+    // }
+  }, [data, dispatcher]);
 
   useEffect(() => {
-    if (transactionData) {
-      dispatcher(setTransaction(transactionData));
-    }
     if (supportData) {
       dispatcher(setSupport(supportData));
     }
-  }, [transactionData, supportData, ]);
-
-  useEffect(() => {
-    if (loanData) {
-      dispatcher(setLoans(loanData));
-      dispatcher(setRecentLoans(loanData?.docs?.slice(0, 6)));
+    if (jobData) {
+      dispatcher(setJobs(jobData));
     }
-    if (requestData) {
-      dispatcher(setLoanRequests(requestData));
+    if (jobApplicationData) {
+      dispatcher(setJobApplications(jobApplicationData));
     }
-    if (companyData) {
-      dispatcher(setCompanies(companyData));
-    }
-  }, [loanData, companyData, requestData]);
+  }, [dispatcher, supportData, jobData, jobApplicationData]);
 
   useEffect(() => {
     if (usersData) {
@@ -156,7 +141,8 @@ export default function App() {
   };
 
   // Change the openConfigurator state
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
+  const handleConfiguratorOpen = () =>
+    setOpenConfigurator(dispatch, !openConfigurator);
 
   // Setting the dir attribute for the body element
   useEffect(() => {
@@ -176,7 +162,14 @@ export default function App() {
       }
 
       if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
+        return (
+          <Route
+            exact
+            path={route.route}
+            element={route.component}
+            key={route.key}
+          />
+        );
       }
 
       return null;
@@ -222,7 +215,7 @@ export default function App() {
             <Sidenav
               color={sidenavColor}
               brand={brand}
-              brandName="FastQuid Admin"
+              brandName="ProHelp Admin"
               routes={routes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}

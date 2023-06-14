@@ -24,7 +24,7 @@ import Settings from "examples/Icons/Settings";
 import breakpoints from "assets/theme/base/breakpoints";
 
 // Images
-import burceMars from "assets/images/bruce-mars.jpg";
+// import burceMars from "assets/images/bruce-mars.jpg";
 import { useSelector, useDispatch } from "react-redux";
 import curved0 from "assets/images/fast-logos/profile_bgImage.jpg";
 import { setTab } from "redux/slices/settings";
@@ -58,6 +58,8 @@ function Header() {
 
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
 
+  // main
+
   return (
     <SoftBox position="relative">
       <DashboardNavbar absolute light />
@@ -90,7 +92,7 @@ function Header() {
         <Grid container spacing={3} alignItems="center">
           <Grid item>
             <SoftAvatar
-              src={profileData?.photoUrl}
+              src={profileData?.bio?.image}
               alt="profile-image"
               variant="rounded"
               size="xl"
@@ -100,7 +102,7 @@ function Header() {
           <Grid item>
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium" textTransform="capitalize">
-                {profileData?.fullName}
+                {profileData?.bio?.fullname}
               </SoftTypography>
               <SoftTypography
                 variant="button"
@@ -108,13 +110,13 @@ function Header() {
                 fontWeight="medium"
                 textTransform="capitalize"
               >
-                {`${profileData?.privilege?.role}, ${profileData?.privilege?.claim}`}
+                {`${profileData?.privilege?.role}, ${profileData?.privilege?.access}`}
               </SoftTypography>
             </SoftBox>
           </Grid>
           <Grid item xs={12} md={6} lg={4} sx={{ ml: "auto" }}>
-            <AppBar position="static">
-              <Tabs
+            {/* <AppBar position="static"> */}
+              {/* <Tabs
                 orientation={tabsOrientation}
                 value={tabValue}
                 onChange={handleSetTabValue}
@@ -127,10 +129,10 @@ function Header() {
                     dispatch(setTab(0));
                   }}
                 />
-                {profileData?.privilege?.type === "superadmin" &&
+                {/* {profileData?.privilege?.type === "superadmin" &&
                   (profileData?.privilege?.role === "manager" ||
                     profileData?.privilege?.role === "developer") &&
-                  profileData?.privilege?.claim === "read/write" && (
+                  profileData?.privilege?.access === "read/write" && (
                     <Tab
                       label="Platform Settings"
                       icon={<Settings />}
@@ -138,9 +140,9 @@ function Header() {
                         dispatch(setTab(1));
                       }}
                     />
-                  )}
-              </Tabs>
-            </AppBar>
+                  )} *
+              </Tabs> */}
+            {/* </AppBar> */}
           </Grid>
         </Grid>
       </Card>

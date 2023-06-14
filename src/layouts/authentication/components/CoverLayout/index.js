@@ -1,5 +1,3 @@
-
-
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
@@ -17,10 +15,18 @@ import PageLayout from "examples/LayoutContainers/PageLayout";
 // Authentication layout components
 import Footer from "layouts/authentication/components/Footer";
 
-import logo from "../../../../assets/images/fast-logos/logo.svg";
+import logo from "../../../../assets/images/fast-logos/logo_dark.png";
 import { Box } from "@mui/material";
 
-function CoverLayout({ color, header, title, description, image, top, children }) {
+function CoverLayout({
+  color,
+  header,
+  title,
+  description,
+  image,
+  top,
+  children,
+}) {
   return (
     <PageLayout background="white">
       {/* <DefaultNavbar
@@ -51,14 +57,32 @@ function CoverLayout({ color, header, title, description, image, top, children }
                     justifyContent={"center"}
                     alignItems={"center"}
                   >
-                    <img src={logo} width={128} />
+                    <img src={logo} width={24} alt="" />
+                    <SoftTypography
+                      style={{ marginLeft: 10 }}
+                      variant="h5"
+                      fontWeight="bold"
+                      color={"info"}
+                      textGradient
+                    >
+                      ProHelp
+                    </SoftTypography>
                   </Box>
                   <SoftBox mb={1}>
-                    <SoftTypography variant="h5" fontWeight="bold" color={"error"} textGradient>
+                    <SoftTypography
+                      variant="h5"
+                      fontWeight="bold"
+                      color={"info"}
+                      textGradient
+                    >
                       {title}
                     </SoftTypography>
                   </SoftBox>
-                  <SoftTypography variant="body2" fontWeight="regular" color="text">
+                  <SoftTypography
+                    variant="body2"
+                    fontWeight="regular"
+                    color="text"
+                  >
                     {description}
                   </SoftTypography>
                 </>
@@ -79,7 +103,8 @@ function CoverLayout({ color, header, title, description, image, top, children }
             sx={{
               transform: "skewX(-10deg)",
               overflow: "hidden",
-              borderBottomLeftRadius: ({ borders: { borderRadius } }) => borderRadius.lg,
+              borderBottomLeftRadius: ({ borders: { borderRadius } }) =>
+                borderRadius.lg,
             }}
           >
             <SoftBox
@@ -89,7 +114,7 @@ function CoverLayout({ color, header, title, description, image, top, children }
                 backgroundImage: `url(${image})`,
                 backgroundSize: "cover",
                 transform: "skewX(10deg)",
-                backgroundPosition: 'center'
+                backgroundPosition: "center",
               }}
             />
           </SoftBox>

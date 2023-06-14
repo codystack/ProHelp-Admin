@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-export default function useSupport() {
+export default function useSupport(page) {
   const { data, mutate, error } = useSWR('/support/all');
   // console.log('response', error);
   const loading = !data && !error;

@@ -1,6 +1,6 @@
 // Soft UI Dashboard React layouts
 import Dashboard from "layouts/dashboard";
-import Loans from "layouts/loans";
+// import Loans from "layouts/loans";
 // import Transactions from "layouts/transactions";
 
 import Profile from "layouts/profile";
@@ -12,17 +12,19 @@ import Settings from "examples/Icons/Settings";
 
 import SpaceShip from "examples/Icons/SpaceShip";
 import CustomerSupport from "examples/Icons/CustomerSupport";
-import CreditCard from "examples/Icons/CreditCard";
+// import CreditCard from "examples/Icons/CreditCard";
 
 import { People, Person } from "@mui/icons-material";
 import { Box } from "@mui/material";
 import Support from "pages/support";
 import Users from "pages/users";
-import Transactions from "pages/transactions";
-import About from "pages/about";
-import Companies from "pages/companies";
+// import Transactions from "pages/transactions";
+// import About from "pages/about";
+// import Companies from "pages/companies";
 import Admins from "pages/admins";
-import Requests from "pages/requests";
+import Jobs from "pages/jobs";
+import Applications from "pages/applications";
+// import Requests from "pages/requests";
 
 const routes = [
   {
@@ -36,31 +38,31 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Requests",
-    key: "requests",
-    route: "/requests",
+    name: "Jobs",
+    key: "jobs",
+    route: "/jobs",
     icon: <Office size="12px" />,
-    component: <Requests />,
+    component: <Jobs />,
     noCollapse: true,
   },
   {
     type: "collapse",
-    name: "Loans",
-    key: "loans",
-    route: "/loans",
+    name: "Applications",
+    key: "applications",
+    route: "/applications",
     icon: <Office size="12px" />,
-    component: <Loans />,
+    component: <Applications />,
     noCollapse: true,
   },
-  {
-    type: "collapse",
-    name: "Transactions",
-    key: "transactions",
-    route: "/transactions",
-    icon: <CreditCard size="12px" />,
-    component: <Transactions />,
-    noCollapse: true,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "Transactions",
+  //   key: "transactions",
+  //   route: "/transactions",
+  //   icon: <CreditCard size="12px" />,
+  //   component: <Transactions />,
+  //   noCollapse: true,
+  // },
   {
     type: "collapse",
     name: "Support",
@@ -70,15 +72,15 @@ const routes = [
     component: <Support />,
     noCollapse: true,
   },
-  {
-    type: "collapse",
-    name: "Companies",
-    key: "companies",
-    route: "/companies",
-    icon: <Settings size="12px" />,
-    component: <Companies />,
-    noCollapse: true,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "Companies",
+  //   key: "companies",
+  //   route: "/companies",
+  //   icon: <Settings size="12px" />,
+  //   component: <Companies />,
+  //   noCollapse: true,
+  // },
   { type: "title", title: "Account", key: "account-pages" },
   {
     type: "collapse",

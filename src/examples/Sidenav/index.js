@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 
 // react-router-dom components
@@ -65,62 +64,64 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   }, [dispatch, location]);
 
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
-  const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, route, href }) => {
-    let returnValue;
+  const renderRoutes = routes.map(
+    ({ type, name, icon, title, noCollapse, key, route, href }) => {
+      let returnValue;
 
-    if (type === "collapse") {
-      returnValue = href ? (
-        <Link
-          href={href}
-          key={key}
-          target="_blank"
-          rel="noreferrer"
-          sx={{ textDecoration: "none" }}
-        >
-          <SidenavCollapse
-            color={color}
-            name={name}
-            icon={icon}
-            active={key === collapseName}
-            noCollapse={noCollapse}
-          />
-        </Link>
-      ) : (
-        <NavLink to={route} key={key}>
-          <SidenavCollapse
-            color={color}
+      if (type === "collapse") {
+        returnValue = href ? (
+          <Link
+            href={href}
             key={key}
-            name={name}
-            icon={icon}
-            active={key === collapseName}
-            noCollapse={noCollapse}
-          />
-        </NavLink>
-      );
-    } else if (type === "title") {
-      returnValue = (
-        <SoftTypography
-          key={key}
-          display="block"
-          variant="caption"
-          fontWeight="bold"
-          textTransform="uppercase"
-          opacity={0.6}
-          pl={3}
-          mt={2}
-          mb={1}
-          ml={1}
-          sx={{color: '#f1f3f4'}}
-        >
-          {title}
-        </SoftTypography>
-      );
-    } else if (type === "divider") {
-      returnValue = <Divider key={key} />;
-    }
+            target="_blank"
+            rel="noreferrer"
+            sx={{ textDecoration: "none" }}
+          >
+            <SidenavCollapse
+              color={color}
+              name={name}
+              icon={icon}
+              active={key === collapseName}
+              noCollapse={noCollapse}
+            />
+          </Link>
+        ) : (
+          <NavLink to={route} key={key}>
+            <SidenavCollapse
+              color={color}
+              key={key}
+              name={name}
+              icon={icon}
+              active={key === collapseName}
+              noCollapse={noCollapse}
+            />
+          </NavLink>
+        );
+      } else if (type === "title") {
+        returnValue = (
+          <SoftTypography
+            key={key}
+            display="block"
+            variant="caption"
+            fontWeight="bold"
+            textTransform="uppercase"
+            opacity={0.6}
+            pl={3}
+            mt={2}
+            mb={1}
+            ml={1}
+            sx={{ color: "#f1f3f4" }}
+          >
+            {title}
+          </SoftTypography>
+        );
+      } else if (type === "divider") {
+        returnValue = <Divider key={key} />;
+      }
 
-    return returnValue;
-  });
+      return returnValue;
+    }
+  );
 
   const logout = async (e) => {
     e.preventDefault();
@@ -133,7 +134,6 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       toast.promise(response, {
         loading: "Loading",
         success: (res) => {
-
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
 
@@ -151,12 +151,16 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         error: (err) => {
           console.log("ERROR HERE >>> ", `${err}`);
           dispatcher(setLoading(false));
-          return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
+          return (
+            err?.response?.data?.message ||
+            err?.message ||
+            "Something went wrong, try again."
+          );
         },
       });
     } catch (error) {
       dispatcher(setLoading(false));
-      console.log("ERROR => ", error); 
+      console.log("ERROR => ", error);
     }
   };
 
@@ -176,30 +180,50 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
             <Icon sx={{ fontWeight: "bold" }}>close</Icon>
           </SoftTypography>
         </SoftBox>
-        <SoftBox component={NavLink} to="/" display="flex" justifyContent="center" alignItems="center">
-          {brand && <SoftBox component="img" src={brand} alt="Soft UI Logo" width="75%" />}
+        <SoftBox
+          component={NavLink}
+          to="/"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          {brand && (
+            <SoftBox
+              component="img"
+              src={brand}
+              alt="Soft UI Logo"
+              width="25%"
+            />
+          )}
           {/* <SoftBox
             width={!brandName && "100%"}
             sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}
           >
-            {/* <SoftTypography component="h6" variant="button" fontWeight="medium">
-              {brandName}
-            </SoftTypography> 
+            {/*
           </SoftBox> */}
+          <SoftTypography
+            style={{ marginLeft: 10, color: 'white' }}
+            component="h1"
+            fontWeight="medium"
+          >
+            {"ProHelp"}
+          </SoftTypography>
         </SoftBox>
       </SoftBox>
       <Divider />
-      <List sx={{ background: "#18113c", borderRadius: 2 }}>{renderRoutes}</List>
+      <List sx={{ background: "#0066F5", borderRadius: 2 }}>
+        {renderRoutes}
+      </List>
       <SoftBox pt={2} my={2} mx={2} mt="auto">
         {/* <SidenavCard /> */}
         <SoftBox mt={2}>
           <SoftButton
-            component="a"
+            component="button"
             // href="https://creative-tim.com/product/soft-ui-dashboard-pro-react"
             // target="_blank"
             // rel="noreferrer"
             variant="gradient"
-            color={color}
+            color={"white"}
             fullWidth
             onClick={logout}
           >
@@ -219,7 +243,15 @@ Sidenav.defaultProps = {
 
 // Typechecking props for the Sidenav
 Sidenav.propTypes = {
-  color: PropTypes.oneOf(["primary", "secondary", "info", "success", "warning", "error", "dark"]),
+  color: PropTypes.oneOf([
+    "primary",
+    "secondary",
+    "info",
+    "success",
+    "warning",
+    "error",
+    "dark",
+  ]),
   brand: PropTypes.string,
   brandName: PropTypes.string.isRequired,
   routes: PropTypes.arrayOf(PropTypes.object).isRequired,

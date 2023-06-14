@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-export default function useSettings() {
+export default function useSettings(page) {
   const { data, mutate, error } = useSWR('/admin/setting/all');
   // console.log('response', error);
   const loading = !data && !error;

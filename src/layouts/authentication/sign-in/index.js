@@ -24,13 +24,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../../redux/slices/backdrop";
 import { setProfile } from "redux/slices/profile";
 import { setAuth } from "redux/slices/profile";
+import { mutate } from "swr";
 
 function SignIn(props) {
   // const { mutate } = props;
   const [rememberMe, setRememberMe] = useState(true);
   // const [loading, setLoading] = useState();
   const [formValues, setFormValues] = useState({
-    emailAddress: "",
+    email: "",
     password: "",
   });
 
@@ -56,27 +57,28 @@ function SignIn(props) {
       toast.promise(response, {
         loading: "Loading",
         success: (res) => {
-          localStorage.setItem("accessToken", res?.data?.accessToken);
-          localStorage.setItem("refreshToken", res?.data?.refreshToken);
+          localStorage.setItem("accessToken", res?.data?.token);
+          localStorage.setItem("refreshToken", res?.data?.token);
 
           dispatch(setProfile(res?.data?.data));
           dispatch(setAuth(true));
 
           mutate();
 
-          console.log("PROFILE DATA >> ", data);
+          // console.log("PROFILE DATA >> ", data);
           setTimeout(() => {
             mutate();
             dispatch(setLoading(false));
-            console.log("PROFILE DATA >> ", data);
+            // console.log("PROFILE DATA >> ", data);
             // navigate("/dashboard");
           }, 5000);
 
           return "Login successful!";
         },
         error: (err) => {
-          console.log("err", err);
+          // console.log("err", err);
           dispatch(setLoading(false));
+          // toast.error("DFDjhj");
           return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
         },
       });
@@ -103,8 +105,8 @@ function SignIn(props) {
             </SoftTypography>
           </SoftBox>
           <SoftInput
-            value={formValues.emailAddress}
-            name="emailAddress"
+            value={formValues.email}
+            name="email"
             onChange={handleChange}
             required
             type="email"
@@ -124,7 +126,7 @@ function SignIn(props) {
             required
             type="password"
             placeholder="Password"
-          />
+          /> 
         </SoftBox>
         <SoftBox display="flex" alignItems="center">
           <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -138,7 +140,7 @@ function SignIn(props) {
           </SoftTypography>
         </SoftBox>
         <SoftBox mt={4} mb={1}>
-          <SoftButton disable={isLoading} variant="gradient" color="error" type="submit">
+          <SoftButton disable={isLoading} variant="gradient" color="info" type="submit">
             sign in
           </SoftButton>
         </SoftBox>

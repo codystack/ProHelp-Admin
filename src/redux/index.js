@@ -6,7 +6,7 @@ import transactionReducer from "./slices/transactions";
 import supportReducer from "./slices/support";
 import userReducer from "./slices/user";
 import adminReducer from "./slices/admin";
-import companyReducer from "./slices/company";
+import jobReducer from "./slices/jobs";
 import settingReducer from "./slices/settings";
 import cardReducer from "./slices/cards";
 
@@ -19,7 +19,7 @@ export default configureStore({
     support: supportReducer,
     user: userReducer,
     admin: adminReducer,
-    company: companyReducer,
+    job: jobReducer,
     setting: settingReducer,
     card: cardReducer,
   },

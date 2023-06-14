@@ -14,7 +14,11 @@ import { Box, Button, Grid, MenuItem, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 // import env from '../../env';
 
-import { ValidatorForm, TextValidator, SelectValidator } from "react-material-ui-form-validator";
+import {
+  ValidatorForm,
+  TextValidator,
+  SelectValidator,
+} from "react-material-ui-form-validator";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import useProfile from "hooks/profile";
 import { setAuth, setProfile } from "../../redux/slices/profile";
@@ -55,6 +59,10 @@ const privilegeClaims = [
     label: "Read & Write",
     value: "read/write",
   },
+  {
+    label: "Approve Only",
+    value: "approve",
+  },
 ];
 
 const privilegeRoles = [
@@ -67,16 +75,12 @@ const privilegeRoles = [
     value: "sales",
   },
   {
-    label: "Operations",
-    value: "operations",
+    label: "Editor",
+    value: "editor",
   },
   {
     label: "Developer",
     value: "developer",
-  },
-  {
-    label: "Analyst",
-    value: "analyst",
   },
 ];
 
@@ -86,16 +90,14 @@ function RegisterForm(props) {
   const [countryCode] = useState("+234");
   const [showCode, setShowCode] = useState(false);
   const [formValues, setFormValues] = useState({
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    phoneNumber: "",
+    fullname: "",
+    phone: "",
     gender: "",
-    emailAddress: "",
+    email: "",
     password: "",
     type: "",
     role: "",
-    claim: "",
+    access: "",
   });
 
   const navigate = useNavigate();
@@ -127,123 +129,38 @@ function RegisterForm(props) {
     return os;
   };
 
-  //   const registerSchema = Yup.object().shape({
-  //     firstName: Yup.string()
-  //       .min(2, "Too Short!")
-  //       .max(50, "Too Long!")
-  //       .required("First name required"),
-  //     lastName: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Last name required"),
-  //     phoneNumber: Yup.string()
-  //       .matches(phoneRegExp, "Enter a valid phone number")
-  //       .required("Phone number is required")
-  //       .min(10, "Phone Number must be between 10-11 digits")
-  //       .max(11, "Phone Number must not be more than 11 digits"),
-  //     emailAddress: Yup.string()
-  //       .email("Email must be a valid email address")
-  //       .required("Email is required"),
-  //     gender: Yup.string().required("Gender is required"),
-  //     state: Yup.string().required("State is required"),
-  //     city: Yup.string().required("City is required"),
-  //     address: Yup.string().required("Current Address is required"),
-  //     dob: Yup.string().required("Date of Birth is required"),
-  //     password: Yup.string().required("Password is required"),
-  //   });
-
-  //   const formik = useFormik({
-  //     initialValues: {
-  //       firstName: "",
-  //       lastName: "",
-  //       emailAddress: "",
-  //       phoneNumber: "",
-  //       gender: "male",
-  //       dob: new Date("2000-12-31T23:00:00.000Z"),
-  //       address: "",
-  //       state: "Abia",
-  //       city: "",
-  //       password: "",
-  //     },
-  //     // validationSchema: registerSchema,
-  //     onSubmit: async () => {
-  //       console.log("CHECKING >> ");
-
-  //       setLoading(true);
-  //       const payload = {
-  //         ...values,
-  //         phoneNumber: `${countryCode}${
-  //           values?.phoneNumber.charAt(0) === "0"
-  //             ? values?.phoneNumber.substring(1)
-  //             : values?.phoneNumber
-  //         }`,
-  //         location: {
-  //           state: values?.state,
-  //           city: values?.city,
-  //           address: values?.address,
-  //         },
-  //       };
-
-  //       const response = APIService.get("/admin/profile");
-
-  //       toast.promise(response, {
-  //         loading: "Loading",
-  //         success: (res) => {
-  //           setLoading(false);
-  //           // send to verify otp
-  //           //mutate profile
-
-  //           //   navigate("/verify-otp", {
-  //           //     state: {
-  //           //       emailAddress: values?.emailAddress,
-  //           //       accessToken: res?.data?.accessToken,
-  //           //       refreshToken: res?.data?.refreshToken,
-  //           //     },
-  //           //     replace: true,
-  //           //   });
-  //           return `${res?.data?.message}! We sent an OTP to your email address (${values?.emailAddress}). open your mail and enter the OTP sent to your mail.`;
-  //         },
-  //         error: (err) => {
-  //           console.log("ERROR HERE >>> ", `${err}`);
-  //           setLoading(false);
-  //           return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
-  //         },
-  //       });
-  //     },
-  //   });
-
-  //   const { errors, touched, values, handleSubmit, getFieldProps, isValid, setFieldValue } = formik;
-
-  //   const handleShowPassword = () => {
-  //     setShowPassword((show) => !show);
-  //   };
-
   const submitForm = async (e) => {
     // console.log("LOADING >>>", APP_KEY);
     // setLoading(true);
- 
+
     try {
-      const { type, claim, role, ...rest } = Object.assign({}, formValues);
+      const { type, access, role, phone, fullname, gender, ...rest } =
+        Object.assign({}, formValues);
 
       const payload = {
         ...rest,
-        phoneNumber: `${countryCode}${
-          formValues?.phoneNumber.charAt(0) === "0"
-            ? formValues?.phoneNumber.substring(1)
-            : formValues?.phoneNumber
-        }`,
+
         privilege: {
           type: formValues.type,
           role: formValues.role,
-          claim: formValues.claim,
+          access: formValues.access,
         },
         device: {
           os: `${osName()}`,
+        },
+        bio: {
+          fullname: formValues.fullname,
+          phone: `${countryCode}${
+            formValues?.phone.charAt(0) === "0"
+              ? formValues?.phone.substring(1)
+              : formValues?.phone
+          }`,
         },
       };
 
       console.log("PAYLOADS ", payload);
 
       const response = APIService.post("/admin/create", payload);
-
-      //   const response = APIService.get("/admin/create");
 
       toast.promise(response, {
         loading: "Loading",
@@ -258,9 +175,13 @@ function RegisterForm(props) {
           return `Login to continue`;
         },
         error: (err) => {
-          console.log("ERROR HERE >>> ", `${err}`);
+          // console.log("ERROR HERE >>> ", `${err}`);
           setLoading(false);
-          return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
+          return (
+            err?.response?.data?.message ||
+            err?.message ||
+            "Something went wrong, try again."
+          );
         },
       });
     } catch (error) {
@@ -272,74 +193,35 @@ function RegisterForm(props) {
     <>
       <ValidatorForm onSubmit={submitForm}>
         {/* <Stack spacing={2} sx={{ marginBottom: 2 }}> */}
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} md={6}>
-            <TextValidator
-              margin="normal"
-              required
-              fullWidth
-              id="firstName"
-              label="First name"
-              name="firstName"
-              value={formValues.firstName}
-              onChange={handleChange}
-              placeholder="First name"
-              variant="outlined"
-              validators={["required"]}
-              errorMessages={["First name is required"]}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <TextValidator
-              margin="normal"
-              fullWidth
-              id="middleName"
-              label="Middle name"
-              name="middleName"
-              value={formValues.middleName}
-              onChange={handleChange}
-              placeholder="Middle name (optional"
-              variant="outlined"
-            />
-          </Grid>
-        </Grid>
+        <TextValidator
+          margin="normal"
+          required
+          fullWidth
+          id="fullname"
+          name="fullname"
+          value={formValues.fullname}
+          onChange={handleChange}
+          placeholder="Full name"
+          variant="outlined"
+          validators={["required"]}
+          errorMessages={["Full name is required"]}
+        />
 
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} md={6}>
-            <TextValidator
-              margin="normal"
-              required
-              fullWidth
-              id="lastName"
-              label="Last name"
-              name="lastName"
-              value={formValues.lastName}
-              onChange={handleChange}
-              placeholder="Last name"
-              variant="outlined"
-              validators={["required"]}
-              errorMessages={["Last name is required"]}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <TextValidator
-              margin="normal"
-              autoComplete="email-address"
-              required
-              type="email"
-              fullWidth
-              id="emailAddress"
-              label="Email Address"
-              name="emailAddress"
-              value={formValues.emailAddress}
-              onChange={handleChange}
-              placeholder="Email address"
-              variant="outlined"
-              validators={["required"]}
-              errorMessages={["Email address is required"]}
-            />
-          </Grid>
-        </Grid>
+        <TextValidator
+          margin="normal"
+          autoComplete="email-address"
+          required
+          type="email"
+          fullWidth
+          id="email"
+          name="email"
+          value={formValues.email}
+          onChange={handleChange}
+          placeholder="Email address"
+          variant="outlined"
+          validators={["required"]}
+          errorMessages={["Email address is required"]}
+        />
 
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6} md={6}>
@@ -348,10 +230,9 @@ function RegisterForm(props) {
               required
               autoComplete="phone"
               fullWidth
-              id="phoneNumber"
-              label="Phone Number"
-              name="phoneNumber"
-              value={formValues.phoneNumber}
+              id="phone"
+              name="phone"
+              value={formValues.phone}
               onChange={handleChange}
               placeholder="Phone number"
               variant="outlined"
@@ -431,16 +312,16 @@ function RegisterForm(props) {
           <Grid item xs={12} sm={6} md={6}>
             <SelectValidator
               margin="normal"
-              value={formValues.claim}
+              value={formValues.access}
               onChange={handleChange}
-              label="Select admin claim"
-              name="claim"
+              label="Select access"
+              name="access"
               fullWidth
               variant="outlined"
               size="small"
-              id="claim"
+              id="access"
               validators={["required"]}
-              errorMessages={["Admin claim is required"]}
+              errorMessages={["Admin access is required"]}
             >
               {privilegeClaims?.map((item) => (
                 <MenuItem key={item.value} value={item.value}>
@@ -485,7 +366,14 @@ function RegisterForm(props) {
 
         <br />
 
-        <SoftButton fullWidth  size="large" color="error" type="submit" variant="contained" disabled={loading}>
+        <SoftButton
+          fullWidth
+          size="large"
+          color="error"
+          type="submit"
+          variant="contained"
+          disabled={loading}
+        >
           Create Account
         </SoftButton>
 
@@ -498,7 +386,11 @@ function RegisterForm(props) {
         >
           <Typography variant="body2">Already have an account? </Typography>
           <Link
-            style={{ fontSize: 15, textDecoration: "underline", paddingLeft: 10 }}
+            style={{
+              fontSize: 15,
+              textDecoration: "underline",
+              paddingLeft: 10,
+            }}
             to={"/login"}
           >
             Login{" "}

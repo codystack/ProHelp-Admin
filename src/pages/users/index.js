@@ -185,11 +185,11 @@ const Users = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Box py={3} display="flex" flexDirection="row" justifyContent="end" alignItems="center">
+      {/* <Box py={3} display="flex" flexDirection="row" justifyContent="end" alignItems="center">
         <SoftButton variant="contained" startIcon={<Add />} onClick={() => setOpen(true)}>
           Create User
         </SoftButton>
-      </Box>
+      </Box> */}
       <Box sx={{ width: "100%" }}>
         <UsersTable />
       </Box>

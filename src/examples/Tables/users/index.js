@@ -77,7 +77,7 @@ export default function UsersTable() {
     {
       sheet: "Users",
       columns: [
-        { label: "Full Name", value: (row) => row?.firstName + " " + row?.lastName }, // Top level data
+        { label: "Full Name", value: (row) => row?.fullname }, // Top level data
         { label: "Email Address", value: (row) => row?.emailAddress }, // Top level data
         { label: "Phone Number", value: (row) => row?.phoneNumber }, // Top level data
         { label: "Gender", value: "gender" }, // Top level data
@@ -181,7 +181,10 @@ export default function UsersTable() {
         >
           Excel
         </Button>
-        <Button onClick={handleClickOpen} startIcon={<FontAwesomeIcon icon={faFilter} size="xs" />}>
+        <Button
+          onClick={handleClickOpen}
+          startIcon={<FontAwesomeIcon icon={faFilter} size="xs" />}
+        >
           Multi - Filter
         </Button>
         {count !== users?.totalDocs && (
@@ -199,40 +202,49 @@ export default function UsersTable() {
       headerName: "Photo",
       width: 70,
       renderCell: (params) => (
-        <Avatar src={params?.row?.photoUrl} variant="circular">
-          {params?.row?.user?.firstName}
+        <Avatar src={params?.row?.bio?.image} variant="circular">
+          {params?.row?.bio?.fullname}
         </Avatar>
       ),
     },
     {
-      field: "fullName",
-      headerName: "FullName",
+      field: "fullname",
+      headerName: "Full Name",
       width: 150,
       renderCell: (params) => (
-        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{params?.row?.fullName}</p>
+        <p style={{ textTransform: "capitalize", fontSize: 14 }}>
+          {params?.row?.bio?.fullname}
+        </p>
       ),
+    },
+
+    {
+      field: "emailAddress",
+      headerName: "Email",
+      renderCell: (params) => (
+        <p style={{ fontSize: 14 }}>{params?.row?.email}</p>
+      ),
+      width: 156,
+    },
+    {
+      field: "phoneNumber",
+      headerName: "Phone",
+      renderCell: (params) => (
+        <p
+          style={{ textTransform: "capitalize", fontSize: 14 }}
+        >{`${params?.row?.bio?.phone}`}</p>
+      ),
+      width: 135,
     },
     {
       field: "gender",
       headerName: "Gender",
       width: 80,
       renderCell: (params) => (
-        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{params?.row?.gender}</p>
+        <p style={{ textTransform: "capitalize", fontSize: 14 }}>
+          {params?.row?.bio?.gender}
+        </p>
       ),
-    },
-    {
-      field: "emailAddress",
-      headerName: "Email",
-      renderCell: (params) => <p style={{ fontSize: 14 }}>{params?.row?.emailAddress}</p>,
-      width: 150,
-    },
-    {
-      field: "phoneNumber",
-      headerName: "Phone",
-      renderCell: (params) => (
-        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{`${params?.row?.phoneNumber}`}</p>
-      ),
-      width: 135,
     },
     {
       field: "createdAt",
@@ -245,31 +257,43 @@ export default function UsersTable() {
       ),
     },
     {
-      field: "maritalStatus",
-      headerName: "Marital Status",
+      field: "state",
+      headerName: "State",
       renderCell: (params) => (
         <p
           style={{ textTransform: "capitalize", fontSize: 14 }}
-        >{`${params?.row?.maritalStatus}`}</p>
+        >{`${params?.row?.address?.state}`}</p>
       ),
-      width: 115,
+      width: 90,
     },
     {
-      field: "children",
-      headerName: "Children",
-      width: 84,
-      renderCell: (params) => (
-        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{`${fNumber(
-          params?.row?.children
-        )}`}</p>
-      ),
-    },
-    {
-      field: "countryCode",
+      field: "country",
       headerName: "Country",
       width: 80,
       renderCell: (params) => (
-        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{`${params?.row?.countryCode}`}</p>
+        <p
+          style={{ textTransform: "capitalize", fontSize: 14 }}
+        >{`${params?.row?.address?.country}`}</p>
+      ),
+    },
+    {
+      field: "accountType",
+      headerName: "Account",
+      width: 100,
+      renderCell: (params) => (
+        <p
+          style={{ textTransform: "capitalize", fontSize: 14 }}
+        >{`${params?.row?.accountType === "freelancer" ? "Professional" : params?.row?.accountType}`}</p>
+      ),
+    },
+    {
+      field: "nin",
+      headerName: "NIN",
+      width: 110,
+      renderCell: (params) => (
+        <p
+          style={{ textTransform: "capitalize", fontSize: 14 }}
+        >{`${params?.row?.bio?.nin}`}</p>
       ),
     },
     {
@@ -278,26 +302,20 @@ export default function UsersTable() {
       width: 100,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>{`${new Date(
-          params?.row?.dob
+          params?.row?.bio?.dob
         ).toLocaleDateString("en-GB", {})}`}</p>
       ),
     },
     {
-      field: "accountStatus",
-      headerName: "Account Status",
-      width: 120,
+      field: "isVerified",
+      headerName: "Is Verified",
+      width: 90,
       renderCell: (params) => (
         <Chip
           size="small"
           sx={{ textTransform: "capitalize" }}
-          label={params?.row?.accountStatus}
-          color={
-            params?.row?.accountStatus === "pending"
-              ? "warning"
-              : params?.row?.accountStatus === "verified"
-              ? "success"
-              : "error"
-          }
+          label={params?.row?.isVerified ? "Verified" : "Not verified"}
+          color={params?.row?.isVerified ? "success" : "warning"}
         />
       ),
 
@@ -316,7 +334,12 @@ export default function UsersTable() {
   return (
     <div style={{ height: 512, width: "100%" }}>
       <Dialog disablePortal={true} onClose={() => setOpen(false)} open={open}>
-        <SoftBox padding={2} component="form" role="form" onSubmit={formik.handleSubmit}>
+        <SoftBox
+          padding={2}
+          component="form"
+          role="form"
+          onSubmit={formik.handleSubmit}
+        >
           <SoftBox
             pb={1}
             display={"flex"}
@@ -432,7 +455,13 @@ export default function UsersTable() {
             >
               Close
             </SoftButton>
-            <SoftButton type="submit" variant="gradient" color="dark" fullWidth size="small">
+            <SoftButton
+              type="submit"
+              variant="gradient"
+              color="dark"
+              fullWidth
+              size="small"
+            >
               Apply filter
             </SoftButton>
           </SoftBox>

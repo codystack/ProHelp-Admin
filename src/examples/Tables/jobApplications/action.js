@@ -91,9 +91,9 @@ const ActionButton = ({ selected }) => {
   //   setOpenConfirm(true);
   // };
 
-  // const handleClose = () => {
-  //   setOpenConfirm(false);
-  // };
+  const handleClose = () => {
+    // setOpenConfirm(false);
+  };
 
   const renderMenu = (
     <Menu
@@ -119,7 +119,7 @@ const ActionButton = ({ selected }) => {
       >
         Preview
       </MenuItem>
-      {profileData &&
+      {/* {profileData &&
         profileData?.privilege?.type === "superadmin" &&
         profileData?.privilege?.claim === "read/write" && (
           <>
@@ -142,64 +142,38 @@ const ActionButton = ({ selected }) => {
               {"Remove"}
             </MenuItem>
           </>
-        )}
+        )} */}
     </Menu>
   );
 
-  // const updateCompany = async () => {
+
+
+  // const deleteCompany = () => {
   //   handleClose();
   //   dispatch(setLoading(true));
   //   const payload = { ...selected?.row };
 
-  //   // console.log("NEW PAYLOAD ", payload);
   //   try {
-  //     let response = APIService.update("/admin/company/update", `${selected.row?._id}`, payload);
+  //     let response = APIService.update("/company/delete", `${selected.row?._id}`, payload);
 
   //     toast.promise(response, {
   //       loading: "Loading",
   //       success: (res) => {
   //         dispatch(setLoading(false));
   //         mutate("/company/all");
-  //         return `Company updated successfully`;
+  //         return `Company deleted successfully`;
   //       },
   //       error: (err) => {
-  //         console.log("ERROR HERE >>> ", `${err}`);
+  //         // console.log("ERROR HERE >>> ", `${err}`);
   //         dispatch(setLoading(false));
   //         return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
   //       },
   //     });
   //   } catch (error) {
   //     dispatch(setLoading(false));
-  //     console.log("ERROR ASYNC HERE >>> ", `${error}`);
+  //     // console.log("ERROR ASYNC HERE >>> ", `${error}`);
   //   }
   // };
-
-  const deleteCompany = () => {
-    handleClose();
-    dispatch(setLoading(true));
-    const payload = { ...selected?.row };
-
-    try {
-      let response = APIService.update("/company/delete", `${selected.row?._id}`, payload);
-
-      toast.promise(response, {
-        loading: "Loading",
-        success: (res) => {
-          dispatch(setLoading(false));
-          mutate("/company/all");
-          return `Company deleted successfully`;
-        },
-        error: (err) => {
-          // console.log("ERROR HERE >>> ", `${err}`);
-          dispatch(setLoading(false));
-          return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
-        },
-      });
-    } catch (error) {
-      dispatch(setLoading(false));
-      // console.log("ERROR ASYNC HERE >>> ", `${error}`);
-    }
-  };
 
   return (
     <>
@@ -210,7 +184,7 @@ const ActionButton = ({ selected }) => {
       </SoftBox>
       {renderMenu}
 
-      <Dialog
+      {/* <Dialog
         open={openDelete}
         TransitionComponent={Transition}
         keepMounted
@@ -228,7 +202,7 @@ const ActionButton = ({ selected }) => {
           <Button onClick={() => setOpenDelete(false)}>Cancel</Button>
           <Button onClick={deleteCompany}>Yes, proceed</Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
 
       <Dialog
         fullScreen
@@ -255,7 +229,7 @@ const ActionButton = ({ selected }) => {
               component="div"
               color="#fff"
             >
-              {`${selected?.row?.name}'s Company Summary`}
+              {`${selected?.row?.recruiter?.name}'s Job Summary`}
             </Typography>
             <Button autoFocus color="inherit" onClick={() => setOpen(false)}>
               Close

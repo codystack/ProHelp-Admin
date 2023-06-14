@@ -9,10 +9,6 @@ import SoftTypography from "components/SoftTypography";
 // Soft UI Dashboard React examples
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Footer from "examples/Footer";
-import ProfileInfoCard from "examples/Cards/InfoCards/ProfileInfoCard";
-import ProfilesList from "examples/Lists/ProfilesList";
-import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
-import PlaceholderCard from "examples/Cards/PlaceholderCard";
 
 // Overview page components
 import Header from "layouts/profile/components/Header";
@@ -47,20 +43,19 @@ function Overview() {
               <Grid item xs={12} sm={6} md={4}>
                 <SoftBox>
                   <Typography fontWeight={600} variant="body2">
-                    Last Name
+                    Email
                   </Typography>
-                  <SoftTypography textTransform="capitalize" variant="body2">
-                    {" "}
-                    {profileData?.lastName}{" "}
-                  </SoftTypography>
+                  <SoftTypography variant="body2"> {profileData?.emailAddress} </SoftTypography>
                 </SoftBox>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <SoftBox>
                   <Typography fontWeight={600} variant="body2">
-                    Email
+                    Phone Number
                   </Typography>
-                  <SoftTypography variant="body2"> {profileData?.emailAddress} </SoftTypography>
+                  <SoftTypography textTransform="capitalize" variant="body2">
+                    {profileData?.phoneNumber}
+                  </SoftTypography>
                 </SoftBox>
               </Grid>
             </Grid>

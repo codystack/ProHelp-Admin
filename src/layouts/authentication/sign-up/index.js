@@ -44,7 +44,7 @@ function SignUp() {
           justifyContent={"center"}
           alignItems={"center"}
         >
-          <img src={logo} width={128} />
+          {/* <img src={logo} width={128} /> */}
         </Box>
         {/* <SoftBox p={3} mb={1} textAlign="center"></SoftBox>
         <SoftBox mb={2}>
