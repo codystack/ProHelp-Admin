@@ -29,7 +29,7 @@ export default function SupportTable() {
     {
       field: "image",
       headerName: "Photo",
-      width: 80,
+      width: 75,
       renderCell: (params) => (
         <Avatar src={params?.row?.user?.image} variant="circular" />
       ),
@@ -37,7 +37,7 @@ export default function SupportTable() {
     {
       field: "fullname",
       headerName: "Fullname",
-      width: 135,
+      width: 130,
       renderCell: (params) => {
         return <p>{params.row?.user?.fullname}</p>;
       },
@@ -45,30 +45,30 @@ export default function SupportTable() {
     {
       field: "email",
       headerName: "Email address",
-      width: 140,
+      width: 150,
       renderCell: (params) => {
         return <p>{params.row?.user?.email}</p>;
       },
     },
     {
-      field: "ticketId",
+      field: "ticket",
       headerName: "Ticket ID",
-      width: 110,
+      width: 256,
     },
     {
       field: "purpose",
       headerName: "Purpose",
-      width: 320,
+      width: 120
     },
     {
       field: "message",
       headerName: "Message",
-      width: 500,
+      width: 300,
     },
     {
       field: "id",
       headerName: "ACTIONS",
-      width: 90,
+      width: 85,
       renderCell: (params) => {
         return <ActionButton selected={params} />;
       },
@@ -78,7 +78,7 @@ export default function SupportTable() {
   const { supports } = useSelector((state) => state.support);
 
   return (
-    <div style={{ height: 512, width: "100%" }}>
+    <div style={{ height: 610, width: "100%" }}>
       {supports && (
         <DataGrid
           sx={{ padding: 1 }}

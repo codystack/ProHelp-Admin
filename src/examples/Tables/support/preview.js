@@ -24,7 +24,7 @@ const Preview = (props) => {
             <Typography variant="h6" fontWeight={600}>
               TICKET ID
             </Typography>
-            <p style={{ fontSize: 14 }}>{selected?.row?.ticketId}</p>
+            <p style={{ fontSize: 14 }}>{selected?.row?.ticket}</p>
           </Box>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -32,7 +32,7 @@ const Preview = (props) => {
             <Typography variant="h6" fontWeight={600}>
               SUBJECT
             </Typography>
-            <p style={{ fontSize: 14 }}>{selected?.row?.subject}</p>
+            <p style={{ fontSize: 14 }}>{selected?.row?.purpose}</p>
           </Box>
         </Grid>
         <Grid item xs={12} sm={6} md={6}>

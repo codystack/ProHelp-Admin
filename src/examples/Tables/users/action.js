@@ -369,7 +369,7 @@ const ActionButton = ({ selected }) => {
               component="div"
               color="#fff"
             >
-              {`${selected?.row?.fullName}'s Profile`}
+              {`${selected?.row?.bio?.firstname} ${selected?.row?.bio?.middlename} ${selected?.row?.bio?.lastname}'s Profile`}
             </Typography>
             <Button autoFocus color="inherit" onClick={() => setOpen(false)}>
               Close

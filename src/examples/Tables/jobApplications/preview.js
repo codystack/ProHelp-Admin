@@ -18,7 +18,7 @@ const Preview = (props) => {
       <Avatar
         size="large"
         sx={{ width: 128, height: 128, borderRadius: 64 }}
-        src={selected?.row?.recruiter?.photo}
+        src={selected?.row?.applicant?.photo}
       />
       <br />
 
@@ -29,7 +29,7 @@ const Preview = (props) => {
               COMPANY NAME
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.company}
+              {selected?.row?.job?.company}
             </p>
           </Box>
         </Grid>
@@ -39,7 +39,7 @@ const Preview = (props) => {
               JOB TITLE
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.jobTitle}
+              {selected?.row?.job?.jobTitle}
             </p>
           </Box>
         </Grid>
@@ -49,7 +49,7 @@ const Preview = (props) => {
               JOB TYPE
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.jobType}
+              {selected?.row?.job?.jobType}
             </p>
           </Box>
         </Grid>
@@ -59,7 +59,7 @@ const Preview = (props) => {
               WORKPLACE TYPE
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.workplaceType}
+              {selected?.row?.job?.workplaceType}
             </p>
           </Box>
         </Grid>
@@ -72,7 +72,7 @@ const Preview = (props) => {
               JOB COUNTRY
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.jobLocation?.country}
+              {selected?.row?.job?.jobLocation?.country}
             </p>
           </Box>
         </Grid>
@@ -82,7 +82,7 @@ const Preview = (props) => {
               JOB STATE
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.jobLocation?.state}
+              {selected?.row?.job?.jobLocation?.state}
             </p>
           </Box>
         </Grid>
@@ -92,7 +92,7 @@ const Preview = (props) => {
               JOB CITY
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.jobLocation?.city}
+              {selected?.row?.job?.jobLocation?.city}
             </p>
           </Box>
         </Grid>
@@ -102,7 +102,7 @@ const Preview = (props) => {
               JOB STATUS
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.jobStatus}
+              {selected?.row?.job?.jobStatus}
             </p>
           </Box>
         </Grid>
@@ -114,7 +114,7 @@ const Preview = (props) => {
             <Typography variant="h6" fontWeight={600}>
               PROFESSION
             </Typography>
-            <p style={{ fontSize: 14 }}>{selected?.row?.profession}</p>
+            <p style={{ fontSize: 14 }}>{selected?.row?.job?.profession}</p>
           </Box>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -123,7 +123,7 @@ const Preview = (props) => {
               MINIMUM QUALIFICATION
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.minimumQualification}
+              {selected?.row?.job?.minimumQualification}
             </p>
           </Box>
         </Grid>
@@ -133,17 +133,17 @@ const Preview = (props) => {
               APPLICANTS
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.applicants?.length}
+              {selected?.row?.job?.applicants?.length}
             </p>
           </Box>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              JOB POSTED ON
+              APPLICATION SUBMITTED ON
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {new Date(selected?.row?.updatedAt).toLocaleString("en-US", {
+              {new Date(selected?.row?.createdAt).toLocaleString("en-US", {
                 weekday: "short",
                 day: "numeric",
                 month: "short",

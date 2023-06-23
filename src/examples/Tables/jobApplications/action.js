@@ -229,7 +229,7 @@ const ActionButton = ({ selected }) => {
               component="div"
               color="#fff"
             >
-              {`${selected?.row?.recruiter?.name}'s Job Summary`}
+              {`${selected?.row?.applicant?.name}'s Job Application Summary`}
             </Typography>
             <Button autoFocus color="inherit" onClick={() => setOpen(false)}>
               Close

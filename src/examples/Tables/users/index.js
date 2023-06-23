@@ -213,7 +213,11 @@ export default function UsersTable() {
       width: 150,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.bio?.fullname}
+          {params?.row?.bio?.firstname +
+            " " +
+            params?.row?.bio?.middlename +
+            " " +
+            params?.row?.bio?.lastname}
         </p>
       ),
     },
@@ -281,9 +285,11 @@ export default function UsersTable() {
       headerName: "Account",
       width: 100,
       renderCell: (params) => (
-        <p
-          style={{ textTransform: "capitalize", fontSize: 14 }}
-        >{`${params?.row?.accountType === "freelancer" ? "Professional" : params?.row?.accountType}`}</p>
+        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{`${
+          params?.row?.accountType === "freelancer"
+            ? "Professional"
+            : params?.row?.accountType
+        }`}</p>
       ),
     },
     {

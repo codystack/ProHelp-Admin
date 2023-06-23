@@ -21,7 +21,7 @@ const Preview = (props) => {
       <Avatar
         size="large"
         sx={{ width: 128, height: 128 }}
-        src={selected?.row?.photoUrl}
+        src={selected?.row?.bio?.image}
       >{`${fL}${sL}`}</Avatar>
       <br />
       <Grid container spacing={2}>
@@ -30,7 +30,13 @@ const Preview = (props) => {
             <Typography variant="h6" fontWeight={600}>
               FULLNAME
             </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>{selected?.row?.fullName}</p>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {selected?.row?.bio?.firstname +
+                " " +
+                selected?.row?.bio?.middlename +
+                " " +
+                selected?.row?.bio?.lastname}
+            </p>
           </Box>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -39,7 +45,7 @@ const Preview = (props) => {
               EMAIL
             </Typography>
             <p style={{ fontSize: 14, textTransform: "lowercase" }}>
-              {selected?.row?.emailAddress}
+              {selected?.row?.email}
             </p>
           </Box>
         </Grid>
@@ -49,7 +55,7 @@ const Preview = (props) => {
               PHONE NUMBER
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.phoneNumber}
+              {selected?.row?.bio?.phone}
             </p>
           </Box>
         </Grid>
@@ -58,7 +64,9 @@ const Preview = (props) => {
             <Typography variant="h6" fontWeight={600}>
               GENDER
             </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>{selected?.row?.gender}</p>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {selected?.row?.bio?.gender}
+            </p>
           </Box>
         </Grid>
       </Grid>
@@ -67,50 +75,45 @@ const Preview = (props) => {
         <Grid item xs={12} sm={6} md={3}>
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              MARITAL STATUS
-            </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.maritalStatus}
-            </p>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
-              COUNTRY CODE
-            </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.countryCode}
-            </p>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
-              JOINED ON
-            </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {new Date(selected?.row?.createdAt).toLocaleString("en-US", {
-                weekday: "short",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </p>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
               DATE OF BIRTH
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {new Date(selected?.row?.dob).toLocaleString("en-US", {
+              {new Date(selected?.row?.bio?.dob).toLocaleString("en-US", {
                 weekday: "short",
                 day: "numeric",
                 month: "long",
                 year: "numeric",
               })}
+            </p>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Box>
+            <Typography variant="h6" fontWeight={600}>
+              COUNTRY
+            </Typography>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {selected?.row?.address?.country}
+            </p>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Box>
+            <Typography variant="h6" fontWeight={600}>
+              STATE
+            </Typography>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {selected?.row?.address?.state}
+            </p>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Box>
+            <Typography variant="h6" fontWeight={600}>
+              CITY
+            </Typography>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {selected?.row?.address?.city}
             </p>
           </Box>
         </Grid>
@@ -120,10 +123,10 @@ const Preview = (props) => {
         <Grid item xs={12} sm={6} md={3}>
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              LOAN LEVEL
+              STREET ADDRESS
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.loanLevelAmount}
+              {selected?.row?.address?.street}
             </p>
           </Box>
         </Grid>
@@ -150,9 +153,11 @@ const Preview = (props) => {
         <Grid item xs={12} sm={6} md={3}>
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              BVN
+              NIN
             </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>{selected?.row?.bvn}</p>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {selected?.row?.bio?.nin}
+            </p>
           </Box>
         </Grid>
       </Grid>
@@ -161,26 +166,82 @@ const Preview = (props) => {
         <Grid item xs={12} sm={6} md={3}>
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              NO OF CHILDREN
-            </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>{selected?.row?.children}</p>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
-              USER ID
-            </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>{selected?.row?.id}</p>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
-              ACTIVE
+              PROFESSION
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.active ? "True" : "False"}
+              {selected?.row?.profession}
+            </p>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Box>
+            <Typography variant="h6" fontWeight={600}>
+              YEARS OF EXPERIENCE
+            </Typography>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {selected?.row?.experienceYears}
+            </p>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Box>
+            <Typography variant="h6" fontWeight={600}>
+              CONNECTIONS
+            </Typography>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {selected?.row?.connections?.length}
+            </p>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Box>
+            <Typography variant="h6" fontWeight={600}>
+              WALLET BALANCE
+            </Typography>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {selected?.row?.wallet?.balance} coins
+            </p>
+          </Box>
+        </Grid>
+      </Grid>
+      <Divider color="blue" />
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Box>
+            <Typography variant="h6" fontWeight={600}>
+              LANGUAGES
+            </Typography>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {selected?.row?.languagesSpoken?.map((item) => (
+                <li>{item}</li>
+              ))}
+            </p>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Box>
+            <Typography variant="h6" fontWeight={600}>
+              ACCOUNT TYPE
+            </Typography>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {selected?.row?.accountType?.toLowerCase() === "freelancer"
+                ? "Professional"
+                : selected?.row?.accountType}
+            </p>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Box>
+            <Typography variant="h6" fontWeight={600}>
+              ACCOUNT CREATED ON
+            </Typography>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
+              {new Date(selected?.row?.createdAt).toLocaleString("en-US", {
+                weekday: "short",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
             </p>
           </Box>
         </Grid>
@@ -200,49 +261,6 @@ const Preview = (props) => {
           </Box>
         </Grid>
       </Grid>
-      <Divider color="blue" />
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
-              BANK NAME
-            </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.bank?.bankName}
-            </p>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
-              BANK CODE
-            </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.bank?.bankCode}
-            </p>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
-              ACCOUNT NAME
-            </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.bank?.accountName}
-            </p>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
-              ACCOUNT NUMBER
-            </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.bank?.accountNumber}
-            </p>
-          </Box>
-        </Grid>
-      </Grid>
       <br />
       <Box
         padding={1}
@@ -257,14 +275,8 @@ const Preview = (props) => {
         <Chip
           size="large"
           sx={{ textTransform: "capitalize" }}
-          label={selected?.row?.accountStatus}
-          color={
-            selected?.row?.accountStatus === "pending"
-              ? "warning"
-              : selected?.row?.accountStatus === "verified"
-              ? "success"
-              : "error"
-          }
+          label={selected?.row?.isVerified ? "Verified" : "Not verified"}
+          color={!selected?.row?.isVerified ? "warning" : "success"}
         />
       </Box>
     </Box>
