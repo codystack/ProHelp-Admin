@@ -9,6 +9,7 @@ import adminReducer from "./slices/admin";
 import jobReducer from "./slices/jobs";
 import settingReducer from "./slices/settings";
 import cardReducer from "./slices/cards";
+import cmsReducer from "./slices/cms"
 
 export default configureStore({
   reducer: {
@@ -22,5 +23,8 @@ export default configureStore({
     job: jobReducer,
     setting: settingReducer,
     card: cardReducer,
+    cms: cmsReducer
   },
 });
+
+

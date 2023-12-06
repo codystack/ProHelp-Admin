@@ -24,46 +24,18 @@ function CustomToolbar() {
   );
 }
 
-export default function SupportTable() {
+export default function FAQsTable() {
   const columns = [
+    
     {
-      field: "image",
-      headerName: "Photo",
-      width: 75,
-      renderCell: (params) => (
-        <Avatar src={params?.row?.user?.image} variant="circular" />
-      ),
+      field: "question",
+      headerName: "Question",
+      width: 400,
     },
     {
-      field: "fullname",
-      headerName: "Fullname",
-      width: 130,
-      renderCell: (params) => {
-        return <p>{params.row?.user?.fullname}</p>;
-      },
-    },
-    {
-      field: "email",
-      headerName: "Email address",
-      width: 150,
-      renderCell: (params) => {
-        return <p>{params.row?.user?.email}</p>;
-      },
-    },
-    {
-      field: "ticket",
-      headerName: "Ticket ID",
-      width: 256,
-    },
-    {
-      field: "purpose",
-      headerName: "Purpose",
-      width: 120
-    },
-    {
-      field: "message",
-      headerName: "Message",
-      width: 300,
+      field: "answer",
+      headerName: "Answer",
+      width: 750,
     },
     {
       field: "id",
@@ -75,16 +47,17 @@ export default function SupportTable() {
     },
   ];
 
-  const { supports } = useSelector((state) => state.support);
+  const { faqs } = useSelector((state) => state.cms);
 
   return (
-    <div style={{ height: "77vh", width: "100%" }}>
-      {supports && (
+    <div style={{ height: "70vh", width: "100%" }}>
+      {faqs && (
         <DataGrid
           sx={{ padding: 1 }}
-          rows={supports?.docs}
+          rows={faqs}
           columns={columns}
-          //   autoHeight
+          pagination={false}
+          paginationMode="client"
           components={{
             Toolbar: CustomToolbar,
             NoRowsOverlay: CustomNoRowsOverlay,

@@ -56,6 +56,10 @@ import useJobs from "./hooks/useJob";
 import { setJobs } from "redux/slices/jobs";
 import useJobApplications from "hooks/useJobApplication";
 import { setJobApplications } from "redux/slices/jobs";
+import useBanner from "hooks/useBanner";
+import useFAQ from "hooks/useFAQ";
+import { setBanners } from "redux/slices/cms";
+import { setFAQs } from "redux/slices/cms";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -67,11 +71,9 @@ export default function App() {
 
   const { data, mutate } = useProfile();
   const { data: jobData } = useJobs(1);
-  // const { data: adminsData,  } = useAdmins();
-  const { data: jobApplicationData } = useJobApplications();
-  // const { data: settingsData, mutateSettings } = useSettings();
-  // const { data: loanData, mutate: loanMutate } = useLoan(1);
-  // const { data: transactionData, mutate: transactionMutate } = useTransaction(1);
+  const { data: bannerData,  } = useBanner(1);
+  const { data: jobApplicationData } = useJobApplications(1);
+  const { data: faqData } = useFAQ(1);
   const { data: supportData, mutate: supportMutate } = useSupport();
   const { data: usersData, mutate: usersMutate } = useUsers(1);
   const { data: adminsData, mutate: adminsMutate } = useAdmins();
@@ -104,6 +106,12 @@ export default function App() {
   }, [data, dispatcher]);
 
   useEffect(() => {
+    if (bannerData) {
+      dispatcher(setBanners(bannerData?.docs));
+    }
+    if (faqData) {
+      dispatcher(setFAQs(faqData?.docs));
+    }
     if (supportData) {
       dispatcher(setSupport(supportData));
     }
@@ -113,7 +121,7 @@ export default function App() {
     if (jobApplicationData) {
       dispatcher(setJobApplications(jobApplicationData));
     }
-  }, [dispatcher, supportData, jobData, jobApplicationData]);
+  }, [dispatcher, supportData, jobData, jobApplicationData, bannerData, faqData]);
 
   useEffect(() => {
     if (usersData) {

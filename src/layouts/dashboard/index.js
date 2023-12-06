@@ -64,7 +64,7 @@ function Dashboard() {
     }
 
     if (users) {
-      let arr = users?.docs?.filter((item) => item?.accountType.toLowerCase() === "freelancer");
+      let arr = users?.docs?.filter((item) => item?.accountType.toLowerCase() === "professional");
       let arr2 = users?.docs?.filter((item) => item?.accountType.toLowerCase() === "recruiter");
       setProfessionals(arr);
       setRecruiters(arr2);

@@ -338,7 +338,7 @@ export default function UsersTable() {
   ];
 
   return (
-    <div style={{ height: 512, width: "100%" }}>
+    <div style={{ height: "78vh", width: "100%", marginBottom: 21 }}>
       <Dialog disablePortal={true} onClose={() => setOpen(false)} open={open}>
         <SoftBox
           padding={2}

@@ -243,7 +243,7 @@ export default function JobApplicationsTable() {
   }, [paginationModel.page, jobData]);
 
   return (
-    <div style={{ height: 600, width: "100%" }}>
+    <div style={{ height: "75vh", width: "100%" }}>
       {jobApplications && jobApplications?.docs && (
         <DataGrid
           sx={{ padding: 1 }}

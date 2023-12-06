@@ -24,46 +24,39 @@ function CustomToolbar() {
   );
 }
 
-export default function SupportTable() {
+export default function BannersTable() {
   const columns = [
     {
-      field: "image",
-      headerName: "Photo",
-      width: 75,
+      field: "featuredImage",
+      headerName: "Image",
+      width: 125,
       renderCell: (params) => (
-        <Avatar src={params?.row?.user?.image} variant="circular" />
+        <Avatar src={params?.row?.featuredImage} variant="rounded" />
       ),
     },
     {
-      field: "fullname",
-      headerName: "Fullname",
-      width: 130,
+      field: "page",
+      headerName: "Page",
+      width: 120,
       renderCell: (params) => {
-        return <p>{params.row?.user?.fullname}</p>;
+        return <p>{params.row?.page}</p>;
       },
     },
     {
-      field: "email",
-      headerName: "Email address",
-      width: 150,
-      renderCell: (params) => {
-        return <p>{params.row?.user?.email}</p>;
-      },
-    },
-    {
-      field: "ticket",
-      headerName: "Ticket ID",
+      field: "title",
+      headerName: "Title",
       width: 256,
+      renderCell: (params) => {
+        return <p>{params.row?.title}</p>;
+      },
     },
     {
-      field: "purpose",
-      headerName: "Purpose",
-      width: 120
-    },
-    {
-      field: "message",
-      headerName: "Message",
-      width: 300,
+      field: "description",
+      headerName: "Description",
+      width: 500,
+      renderCell: (params) => {
+        return <p>{params.row?.description}</p>;
+      },
     },
     {
       field: "id",
@@ -75,16 +68,17 @@ export default function SupportTable() {
     },
   ];
 
-  const { supports } = useSelector((state) => state.support);
+  const { banners } = useSelector((state) => state.cms);
 
   return (
     <div style={{ height: "77vh", width: "100%" }}>
-      {supports && (
+      {banners && (
         <DataGrid
           sx={{ padding: 1 }}
-          rows={supports?.docs}
+          rows={banners}
           columns={columns}
-          //   autoHeight
+          pagination={false}
+          paginationMode="client"
           components={{
             Toolbar: CustomToolbar,
             NoRowsOverlay: CustomNoRowsOverlay,

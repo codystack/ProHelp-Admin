@@ -14,7 +14,7 @@ import SpaceShip from "examples/Icons/SpaceShip";
 import CustomerSupport from "examples/Icons/CustomerSupport";
 // import CreditCard from "examples/Icons/CreditCard";
 
-import { People, Person } from "@mui/icons-material";
+import { People, Person, Web } from "@mui/icons-material";
 import { Box } from "@mui/material";
 import Support from "pages/support";
 import Users from "pages/users";
@@ -24,6 +24,7 @@ import Users from "pages/users";
 import Admins from "pages/admins";
 import Jobs from "pages/jobs";
 import Applications from "pages/applications";
+import CMS from "pages/cms";
 // import Requests from "pages/requests";
 
 const routes = [
@@ -54,15 +55,15 @@ const routes = [
     component: <Applications />,
     noCollapse: true,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Transactions",
-  //   key: "transactions",
-  //   route: "/transactions",
-  //   icon: <CreditCard size="12px" />,
-  //   component: <Transactions />,
-  //   noCollapse: true,
-  // },
+  {
+    type: "collapse",
+    name: "CMS",
+    key: "cms",
+    route: "/cms",
+    icon: <Web size="12px" />,
+    component: <CMS />,
+    noCollapse: true,
+  },
   {
     type: "collapse",
     name: "Support",

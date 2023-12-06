@@ -72,7 +72,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         returnValue = href ? (
           <Link
             href={href}
-            key={key}
+            key={key} 
             target="_blank"
             rel="noreferrer"
             sx={{ textDecoration: "none" }}
@@ -127,9 +127,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     e.preventDefault();
     try {
       dispatcher(setLoading(true));
-      const response = APIService.update("/admin/logout", "", {});
-
-      //   const response = APIService.get("/admin/create");
+      const response = APIService.post("/admin/logout", {});
 
       toast.promise(response, {
         loading: "Loading",
