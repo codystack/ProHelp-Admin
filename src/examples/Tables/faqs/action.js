@@ -20,8 +20,8 @@ import Slide from '@mui/material/Slide'
 import { Close } from '@mui/icons-material'
 import APIService from 'service'
 import { mutate } from 'swr'
-import UpdateBannerForm from 'forms/cms/update_banner'
 import UpdateFAQForm from 'forms/cms/update_faq'
+import { setFAQs } from 'redux/slices/cms'
 
 const useStyles = makeStyles(theme => ({
   awardRoot: {
@@ -72,7 +72,10 @@ const ActionButton = ({ selected }) => {
       console.log('RESP HERE >>> ', `${res}`)
       mutate('/faqs/all')
       setOpenDelete(false)
+
+      const resp = await APIService.fetcher("/faqs/all/");
       dispatch(setLoading(false))
+      dispatch(setFAQs(resp?.docs));
     } catch (error) {}
   }
 

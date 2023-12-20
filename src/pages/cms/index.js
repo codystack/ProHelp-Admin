@@ -11,11 +11,14 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/system/Box";
 import BannersTable from "examples/Tables/banners";
 import FAQsTable from "examples/Tables/faqs";
-import { AppBar, Button, Dialog, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Button, Dialog, IconButton, List, Toolbar } from "@mui/material";
 import { Add, Close } from "@mui/icons-material";
 import SoftButton from "components/SoftButton";
 import AddBannerForm from "forms/cms/add_banner";
 import AddFAQForm from "forms/cms/add_faq";
+import Slide from '@mui/material/Slide'
+import AddSectionForm from "forms/cms/add_section";
+import SectionsTable from "examples/Tables/sections";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,10 +53,15 @@ function a11yProps(index) {
   };
 }
 
+const Transition = React.forwardRef(function Transition (props, ref) {
+  return <Slide direction='up' ref={ref} {...props} />
+})
+
 const CMS = () => {
   const [value, setValue] = React.useState(0);
   const [openFAQ, setOpenFAQ] = React.useState(false);
   const [openBanner, setOpenBanner] = React.useState(false);
+  const [openSection, setOpenSection] = React.useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -116,6 +124,44 @@ const CMS = () => {
         </Toolbar>
         <AddFAQForm setOpen={setOpenFAQ} />
       </Dialog>
+
+      <Dialog
+        fullScreen
+        open={openSection}
+        onClose={() => setOpenSection(false)}
+        TransitionComponent={Transition}
+      >
+        <AppBar
+          sx={{ position: "relative", backgroundColor: "#18113c", color: "white" }}
+          color="secondary"
+        >
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => setOpenSection(false)}
+              aria-label="close"
+            >
+              <Close />
+            </IconButton>
+            <Typography
+              sx={{ ml: 2, flex: 1, textTransform: "capitalize",}}
+              variant="h6"
+              component="div"
+              color={"#fff"}
+            >
+              {'Add New Section On Website'}
+            </Typography>
+            <Button autoFocus color="inherit" onClick={() => setOpenSection(false)}>
+              Close
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <List>
+          <AddSectionForm setOpen={setOpenSection} />
+        </List>
+      </Dialog>
+      
       <DashboardNavbar />
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -125,7 +171,8 @@ const CMS = () => {
             aria-label="basic tabs example"
           >
             <Tab label="Banners" {...a11yProps(0)} />
-            <Tab label="Frequently Asked Questions" {...a11yProps(1)} />
+            <Tab label="Sections" {...a11yProps(1)} />
+            <Tab label="Frequently Asked Questions" {...a11yProps(2)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -158,6 +205,35 @@ const CMS = () => {
           </Box>
         </TabPanel>
         <TabPanel value={value} index={1}>
+          <Box
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"start"}
+            alignItems={"start"}
+          >
+            <Box
+              pb={2}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <Typography>Website Sections</Typography>
+              <SoftButton
+                startIcon={<Add />}
+                variant="contained"
+                onClick={() => setOpenSection(true)}
+                sx={{ textTransform: "capitalize", color: "white" }}
+              >
+                Add section
+              </SoftButton>
+            </Box>
+            <SectionsTable />
+          </Box>
+        </TabPanel>
+        <TabPanel value={value} index={2}>
           <Box
             width={"100%"}
             display={"flex"}

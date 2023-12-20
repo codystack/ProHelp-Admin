@@ -13,7 +13,7 @@ import ActionButton from "./action";
 import { useSelector } from "react-redux";
 import useJobs from "hooks/useJob";
 import { toast } from "react-hot-toast";
-import { Button } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import { FileDownload } from "@mui/icons-material";
 import xlsx from "json-as-xlsx";
 
@@ -41,6 +41,14 @@ export default function JobApplicationsTable() {
 
   const columns = [
     {
+      field: "photo",
+      headerName: "Image",
+      width: 125,
+      renderCell: (params) => (
+        <Avatar src={params?.row?.applicant?.photo} variant="rounded" />
+      ),
+    },
+    {
       field: "name",
       headerName: "Applicant",
       width: 125,
@@ -49,7 +57,7 @@ export default function JobApplicationsTable() {
           {params?.row?.applicant?.name}
         </p>
       ),
-    },
+    }, 
     {
       field: "email",
       headerName: "Applicant's Email",
@@ -74,7 +82,7 @@ export default function JobApplicationsTable() {
       width: 120,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.job?.recruiter?.name}
+          {params?.row?.jobData?.recruiter?.name}
         </p>
       ),
     },
@@ -94,7 +102,7 @@ export default function JobApplicationsTable() {
       width: 120,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.job?.jobTitle}
+          {params?.row?.jobData?.jobTitle}
         </p>
       ),
     },
@@ -103,7 +111,7 @@ export default function JobApplicationsTable() {
       headerName: "Profession",
       width: 140,
       renderCell: (params) => (
-        <p style={{ fontSize: 14 }}>{params?.row?.job?.professoin}</p>
+        <p style={{ fontSize: 14, textTransform: 'capitalize' }}>{params?.row?.jobData?.profession}</p>
       ),
     },
     {
@@ -112,7 +120,7 @@ export default function JobApplicationsTable() {
       width: 145,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.job?.company}
+          {params?.row?.jobData?.company}
         </p>
       ),
     },
@@ -122,7 +130,7 @@ export default function JobApplicationsTable() {
       width: 110,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.job?.workplaceType}
+          {params?.row?.jobData?.workplaceType}
         </p>
       ),
     },
@@ -132,7 +140,7 @@ export default function JobApplicationsTable() {
       width: 90,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.job?.jobType}
+          {params?.row?.jobData?.jobType}
         </p>
       ),
     },

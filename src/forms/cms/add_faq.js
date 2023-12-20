@@ -11,6 +11,7 @@ import { setLoading } from "redux/slices/backdrop";
 import APIService from "service";
 import { mutate } from "swr";
 import toast from "react-hot-toast";
+import { setFAQs } from "redux/slices/cms";
 
 export default function AddFAQForm({ setOpen }) {
   const dispatch = useDispatch();
@@ -36,9 +37,12 @@ export default function AddFAQForm({ setOpen }) {
         console.log("RESP HERE >>> ", `${res}`);
         mutate("/faqs/all/");
         setOpen(false);
-        dispatch(setLoading(false));
 
-        toast.success("Operation successful");
+        const resp = await APIService.fetcher("/faqs/all/");
+        dispatch(setLoading(false))
+        dispatch(setFAQs(resp?.docs));
+
+        toast.success(`${res.data?.message}`);
       } catch (error) {
         toast.error("Page already");
         dispatch(setLoading(false));

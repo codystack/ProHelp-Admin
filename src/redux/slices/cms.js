@@ -5,6 +5,7 @@ export const cmsSlice = createSlice({
   initialState: {
     faqs: [],
     banners: [],
+    sections: [],
   },
   reducers: {
     setBanners: (state, action) => {
@@ -13,9 +14,12 @@ export const cmsSlice = createSlice({
     setFAQs: (state, action) => {
       state.faqs = action.payload;
     },
+    setSections: (state, action) => {
+      state.sections = action.payload;
+    },
   },
 });
 
-export const { setBanners, setFAQs } = cmsSlice.actions;
+export const { setBanners, setFAQs, setSections } = cmsSlice.actions;
 
 export default cmsSlice.reducer;

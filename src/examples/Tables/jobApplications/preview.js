@@ -29,7 +29,7 @@ const Preview = (props) => {
               COMPANY NAME
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.job?.company}
+              {selected?.row?.jobData?.company}
             </p>
           </Box>
         </Grid>
@@ -39,7 +39,7 @@ const Preview = (props) => {
               JOB TITLE
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.job?.jobTitle}
+              {selected?.row?.jobData?.jobTitle}
             </p>
           </Box>
         </Grid>
@@ -49,7 +49,7 @@ const Preview = (props) => {
               JOB TYPE
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.job?.jobType}
+              {selected?.row?.jobData?.jobType}
             </p>
           </Box>
         </Grid>
@@ -59,7 +59,7 @@ const Preview = (props) => {
               WORKPLACE TYPE
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.job?.workplaceType}
+              {selected?.row?.jobData?.workplaceType}
             </p>
           </Box>
         </Grid>
@@ -72,7 +72,7 @@ const Preview = (props) => {
               JOB COUNTRY
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.job?.jobLocation?.country}
+              {selected?.row?.jobData?.jobLocation?.country}
             </p>
           </Box>
         </Grid>
@@ -82,7 +82,7 @@ const Preview = (props) => {
               JOB STATE
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.job?.jobLocation?.state}
+              {selected?.row?.jobData?.jobLocation?.state}
             </p>
           </Box>
         </Grid>
@@ -92,7 +92,7 @@ const Preview = (props) => {
               JOB CITY
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.job?.jobLocation?.city}
+              {selected?.row?.jobData?.jobLocation?.city}
             </p>
           </Box>
         </Grid>
@@ -102,7 +102,7 @@ const Preview = (props) => {
               JOB STATUS
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.job?.jobStatus}
+              {selected?.row?.jobData?.jobStatus}
             </p>
           </Box>
         </Grid>
@@ -114,7 +114,7 @@ const Preview = (props) => {
             <Typography variant="h6" fontWeight={600}>
               PROFESSION
             </Typography>
-            <p style={{ fontSize: 14 }}>{selected?.row?.job?.profession}</p>
+            <p style={{ fontSize: 14 }}>{selected?.row?.jobData?.profession}</p>
           </Box>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -123,7 +123,7 @@ const Preview = (props) => {
               MINIMUM QUALIFICATION
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.job?.minimumQualification}
+              {selected?.row?.jobData?.minimumQualification}
             </p>
           </Box>
         </Grid>
@@ -133,7 +133,7 @@ const Preview = (props) => {
               APPLICANTS
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.job?.applicants?.length}
+              {selected?.row?.jobData?.applicants?.length}
             </p>
           </Box>
         </Grid>
@@ -160,7 +160,7 @@ const Preview = (props) => {
             <Typography variant="h6" fontWeight={600}>
               JOB DESCRIPTION
             </Typography>
-            <p style={{ fontSize: 14 }}>{selected?.row?.description}</p>
+            <p style={{ fontSize: 14 }}>{selected?.row?.jobData?.description}</p>
           </Box>
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
@@ -169,7 +169,7 @@ const Preview = (props) => {
               JOB REQUIREMEMTS
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.requirements?.map((item, k) => (
+              {selected?.row?.jobData?.requirements?.map((item, k) => (
                 <li key={k}>{`${1 + k}. ${item}`}</li>
               ))}
             </p>
@@ -177,20 +177,26 @@ const Preview = (props) => {
         </Grid>
       </Grid>
       <Toolbar />
+      
+
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={9}>
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              SCREENING QUESTIONS
+              SCREENING QUESTIONS & ANSWERS
             </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.screeningQuestions?.map((item, k) => (
-                <li key={k}>{`${1 + k}. ${item}`}</li>
+            <p style={{ fontSize: 16, textTransform: "capitalize" }}>
+              {selected?.row?.answers?.map((item, k) => (
+                <Box>
+                  <li key={k}>{`${1 + k}. ${item?.question}`}</li>
+                  <Typography ml={2} key={k} fontSize={13} >{`answer: ${item?.answer}`}</Typography>
+                </Box>
               ))}
             </p>
           </Box>
         </Grid>
       </Grid>
+
     </Box>
   );
 };

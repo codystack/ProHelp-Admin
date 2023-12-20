@@ -24,6 +24,7 @@ import {
 import APIService from "service";
 import { mutate } from "swr";
 import toast from "react-hot-toast";
+import { setBanners } from "redux/slices/cms";
 
 export default function UpdateBannerForm({ setOpen, data }) {
   const dispatch = useDispatch();
@@ -117,7 +118,10 @@ export default function UpdateBannerForm({ setOpen, data }) {
           console.log("RESP HERE >>> ", `${res}`);
           mutate("/banners/all");
           setOpen(false);
-          dispatch(setLoading(false));
+
+          const resp = await APIService.fetcher("/banners/all/");
+          dispatch(setLoading(false))
+          dispatch(setBanners(resp?.docs));
 
           toast.success("Operation successful");
         }

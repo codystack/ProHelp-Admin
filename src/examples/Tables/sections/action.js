@@ -35,7 +35,7 @@ import APIService from 'service'
 import { toast } from 'react-hot-toast'
 import { mutate } from 'swr'
 import UpdateBannerForm from 'forms/cms/update_banner'
-import { setBanners } from 'redux/slices/cms'
+import UpdateSectionForm from 'forms/cms/update_section'
 
 const useStyles = makeStyles(theme => ({
   awardRoot: {
@@ -65,7 +65,7 @@ const ActionButton = ({ selected }) => {
   const [openEdit, setOpenEdit] = React.useState(false)
   const [openDelete, setOpenDelete] = React.useState(false)
 
-  const [openConfirm, setOpenConfirm] = React.useState(false)
+  // const [openConfirm, setOpenConfirm] = React.useState(false)
   const [menu, setMenu] = React.useState(null)
 
   const openMenu = ({ currentTarget }) => setMenu(currentTarget)
@@ -80,17 +80,18 @@ const ActionButton = ({ selected }) => {
     try {
       dispatch(setLoading(true))
       const res = await APIService.delete(
-        '/cms/banners/delete',
+        '/cms/sections/delete',
         selected?.row?.id
       )
       console.log('RESP HERE >>> ', `${res}`)
-      mutate('/banners/all')
       setOpenDelete(false)
-
-      const resp = await APIService.fetcher("/banners/all/");
+      
+      const resp = await APIService.fetcher("/sections/all/");
       dispatch(setLoading(false))
-      dispatch(setBanners(resp?.docs));
+      dispatch(setSections(resp?.docs));
+      mutate('/sections/all')
 
+     
     } catch (error) {}
   }
 
@@ -143,13 +144,42 @@ const ActionButton = ({ selected }) => {
 
       <Dialog
         open={openEdit}
-        maxWidth='md'
+        fullScreen={true}
         onClose={() => setOpenEdit(false)}
         TransitionComponent={Transition}
       >
-        <Box p={1} width={'40vw'}>
-          <UpdateBannerForm data={selected?.row} setOpen={setOpenEdit} />
+         <AppBar
+          sx={{ position: "relative", backgroundColor: "#18113c", color: "white" }}
+          color="secondary"
+        >
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => setOpenEdit(false)}
+              aria-label="close"
+            >
+              <Close />
+            </IconButton>
+            <Typography
+              sx={{ ml: 2, flex: 1, textTransform: "capitalize",}}
+              variant="h6"
+              component="div"
+              color={"#fff"}
+            >
+              {'Update Section On Website'}
+            </Typography>
+            <Button autoFocus color="inherit" onClick={() => setOpenEdit(false)}>
+              Close
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <List>
+        <Box p={1} >
+          <UpdateSectionForm data={selected?.row} setOpen={setOpenEdit} />
         </Box>
+        </List>
+       
       </Dialog>
 
       <Dialog
@@ -166,13 +196,13 @@ const ActionButton = ({ selected }) => {
             justifyContent={'space-between'}
             alignItems={'center'}
           >
-            <Typography>Delete Banner</Typography>
+            <Typography>Delete Section</Typography>
             <IconButton onClick={() => setOpenDelete(false)}>
               <Close />
             </IconButton>
           </Box>
           <Typography gutterBottom py={2} variant='body2'>
-            Are you sure you want to delete this banner?
+            Are you sure you want to delete this section?
           </Typography>
           <Box
             display={'flex'}

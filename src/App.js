@@ -21,7 +21,7 @@ import theme from "assets/theme";
 
 // RTL plugins
 import rtlPlugin from "stylis-plugin-rtl";
-import { CacheProvider } from "@emotion/react";
+// import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 
 // Soft UI Dashboard React routes
@@ -60,6 +60,8 @@ import useBanner from "hooks/useBanner";
 import useFAQ from "hooks/useFAQ";
 import { setBanners } from "redux/slices/cms";
 import { setFAQs } from "redux/slices/cms";
+import useSection from "hooks/useSection";
+import { setSections } from "redux/slices/cms";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -72,6 +74,7 @@ export default function App() {
   const { data, mutate } = useProfile();
   const { data: jobData } = useJobs(1);
   const { data: bannerData,  } = useBanner(1);
+  const { data: sectionData,  } = useSection(1);
   const { data: jobApplicationData } = useJobApplications(1);
   const { data: faqData } = useFAQ(1);
   const { data: supportData, mutate: supportMutate } = useSupport();
@@ -109,6 +112,9 @@ export default function App() {
     if (bannerData) {
       dispatcher(setBanners(bannerData?.docs));
     }
+    if (sectionData) {
+      dispatcher(setSections(sectionData?.docs));
+    }
     if (faqData) {
       dispatcher(setFAQs(faqData?.docs));
     }
@@ -121,7 +127,7 @@ export default function App() {
     if (jobApplicationData) {
       dispatcher(setJobApplications(jobApplicationData));
     }
-  }, [dispatcher, supportData, jobData, jobApplicationData, bannerData, faqData]);
+  }, [dispatcher, supportData, jobData, jobApplicationData, bannerData, faqData, sectionData]);
 
   useEffect(() => {
     if (usersData) {

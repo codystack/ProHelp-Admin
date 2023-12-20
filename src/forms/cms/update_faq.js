@@ -11,6 +11,7 @@ import { setLoading } from "redux/slices/backdrop";
 import APIService from "service";
 import { mutate } from "swr";
 import toast from "react-hot-toast";
+import { setFAQs } from "redux/slices/cms";
 
 export default function UpdateFAQForm({ setOpen, data }) {
   const dispatch = useDispatch();
@@ -45,9 +46,13 @@ export default function UpdateFAQForm({ setOpen, data }) {
           console.log("RESP HERE >>> ", `${res}`);
           mutate("/faqs/all");
           setOpen(false);
-          dispatch(setLoading(false));
 
-          toast.success("Operation successful");
+          const resp = await APIService.fetcher("/faqs/all/");
+          dispatch(setLoading(false))
+          console.log("UPDATTE DETS : A ", resp);
+          dispatch(setFAQs(resp?.docs));
+
+          toast.success(`${res.data?.message}`);
         
       } catch (error) {
         toast.error("Page already");
