@@ -1,6 +1,7 @@
 import useSWR from 'swr';
 
 export default function useJobApplications(page) {
+  const authEmail = localStorage.getItem('auth-email')
   const { data, mutate, error } = useSWR('/applications/all?page='+page);
   // console.log('response', error);
   const loading = !data && !error;

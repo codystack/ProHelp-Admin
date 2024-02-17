@@ -44,14 +44,14 @@ export default function JobsTable() {
       width: 125,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.recruiter?.name}
+          {`${params?.row?.recruiter?.bio?.firstname} ${params?.row?.recruiter?.bio?.lastname}`}
         </p>
       ),
     },
     {
       field: "jobTitle",
       headerName: "Job Title",
-      width: 120,
+      width: 175,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
           {params?.row?.jobTitle}
@@ -63,7 +63,7 @@ export default function JobsTable() {
       headerName: "Profession",
       width: 140,
       renderCell: (params) => (
-        <p style={{ fontSize: 14 }}>{params?.row?.professoin}</p>
+        <p style={{ fontSize: 14 }}>{params?.row?.profession?.name}</p>
       ),
     },
     {

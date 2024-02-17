@@ -59,20 +59,12 @@ const privilegeClaims = [
     label: "Read & Write",
     value: "read/write",
   },
-  {
-    label: "Approve Only",
-    value: "approve",
-  },
 ];
 
 const privilegeRoles = [
   {
     label: "Manager",
     value: "manager",
-  },
-  {
-    label: "Sales",
-    value: "sales",
   },
   {
     label: "Editor",

@@ -7,8 +7,8 @@ import formatCurrency from "utils/formatCurrency";
 const Preview = (props) => {
   let { selected } = props;
 
-  let fL = selected?.row?.firstName?.slice(0, 1);
-  let sL = selected?.row?.lastName?.slice(0, 1);
+  let fL = selected?.row?.bio?.firstname?.slice(0, 1);
+  let sL = selected?.row?.bio?.lastname?.slice(0, 1);
 
   return (
     <Box
@@ -21,7 +21,7 @@ const Preview = (props) => {
       <Avatar
         size="large"
         sx={{ width: 128, height: 128 }}
-        src={selected?.row?.photoUrl}
+        src={selected?.row?.bio?.image}
       >{`${fL}${sL}`}</Avatar>
       <br />
       <Grid container spacing={2}>
@@ -30,7 +30,7 @@ const Preview = (props) => {
             <Typography variant="h6" fontWeight={600}>
               FULLNAME
             </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>{selected?.row?.fullName}</p>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>{`${selected?.row?.bio?.firstname} ${selected?.row?.bio?.lastname}`}</p>
           </Box>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -39,7 +39,7 @@ const Preview = (props) => {
               EMAIL
             </Typography>
             <p style={{ fontSize: 14, textTransform: "lowercase" }}>
-              {selected?.row?.emailAddress}
+              {selected?.row?.email}
             </p>
           </Box>
         </Grid>
@@ -49,7 +49,7 @@ const Preview = (props) => {
               PHONE NUMBER
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.phoneNumber}
+              {selected?.row?.bio?.phone}
             </p>
           </Box>
         </Grid>
@@ -58,7 +58,7 @@ const Preview = (props) => {
             <Typography variant="h6" fontWeight={600}>
               GENDER
             </Typography>
-            <p style={{ fontSize: 14, textTransform: "capitalize" }}>{selected?.row?.gender}</p>
+            <p style={{ fontSize: 14, textTransform: "capitalize" }}>{selected?.row?.bio?.gender}</p>
           </Box>
         </Grid>
       </Grid>
@@ -77,10 +77,10 @@ const Preview = (props) => {
         <Grid item xs={12} sm={6} md={3}>
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              COUNTRY CODE
+              ACCESS
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {selected?.row?.countryCode}
+              {selected?.row?.privilege?.access}
             </p>
           </Box>
         </Grid>
@@ -102,15 +102,10 @@ const Preview = (props) => {
         <Grid item xs={12} sm={6} md={3}>
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              DATE OF BIRTH
+              DEVICE
             </Typography>
             <p style={{ fontSize: 14, textTransform: "capitalize" }}>
-              {new Date(selected?.row?.dob).toLocaleString("en-US", {
-                weekday: "short",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
+              {selected?.row?.device?.os}
             </p>
           </Box>
         </Grid>

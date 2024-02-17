@@ -6,33 +6,25 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
 // import { useSnackbar } from "notistack";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { makeStyles } from "@mui/styles";
-import { setLoading } from "../../../redux/slices/backdrop";
 import { PropTypes } from "prop-types";
 import SoftBox from "components/SoftBox";
 import {
   AppBar,
-  Avatar,
   Dialog,
   DialogActions,
   DialogContent,
-  Divider,
-  Grid,
+  DialogContentText,
+  DialogTitle,
   Icon,
   List,
-  ListItem,
   Toolbar,
 } from "@mui/material";
 
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { Close } from "@mui/icons-material";
 import Preview from "./preview";
-import APIService from "service";
-import { toast } from "react-hot-toast";
-import { mutate } from "swr";
 
 const useStyles = makeStyles((theme) => ({
   awardRoot: {
@@ -70,16 +62,7 @@ const ActionButton = ({ selected }) => {
   const openAction = Boolean(anchorEl);
   //   const { enqueueSnackbar } = useSnackbar();
   const { profileData } = useSelector((state) => state.profile);
-  const handleMoreAction = (e) => setAnchorEl(e.currentTarget);
 
-  const handleCloseMoreAction = () => {
-    setAnchorEl(null);
-  };
-
-  const handleClickOpen = () => {
-    closeMenu();
-    setOpenConfirm(true);
-  };
 
   const renderMenu = (
     <Menu
@@ -96,9 +79,47 @@ const ActionButton = ({ selected }) => {
       open={Boolean(menu)}
       onClose={closeMenu}
     >
+      {(profileData.privilege?.type?.toLowerCase() === "superadmin" &&
+        profileData?.privilege?.role?.toLowerCase() === "manager") ||
+        (profileData?.privilege?.role?.toLowerCase() === "developer" &&
+          profileData?.privilege?.access?.toLowerCase() === "read/write" && (
+            <div>
+              {selected?.row?.status === "open" && (
+                <MenuItem onClick={() => setOpenDelete(true)}>Close Ticket</MenuItem>
+              )}
+            </div>
+          ))}
       <MenuItem onClick={() => setOpen(true)}>Preview</MenuItem>
     </Menu>
   );
+
+
+  const closeTicket = () => {
+    setOpenDelete(false);
+    dispatch(setLoading(true));
+
+    try {
+      let response = APIService.update("/support/close", `${selected?.row?.id}`, {});
+
+      toast.promise(response, {
+        loading: "Loading",
+        success: res => {
+          dispatch(setLoading(false));
+          mutate();
+          // mutate("/support/all");
+          return `${response.data?.message || "Ticket closed successfully"}`;
+        },
+        error: err => {
+          // console.log("ERROR HERE >>> ", `${err}`);
+          dispatch(setLoading(false));
+          return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
+        },
+      });
+    } catch (error) {
+      dispatch(setLoading(false));
+      console.log("ERROR ASYNC HERE >>> ", `${error}`);
+    }
+  };
 
   return (
     <>
@@ -108,6 +129,26 @@ const ActionButton = ({ selected }) => {
         </Icon>
       </SoftBox>
       {renderMenu}
+
+      <Dialog
+        open={openDelete}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={() => setOpenDelete(true)}
+        aria-describedby='alert-dialog-slide-description'
+      >
+        <DialogTitle>{"Close Support Ticket"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-slide-description'>
+            {`Are you sure you want to close this support ticket by ${selected?.row?.user?.fullname}? 
+            Proceed only if you have resolved this and you\'re sure everything is okay `}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDelete(false)}>Cancel</Button>
+          <Button onClick={() => closeTicket()}>Yes, proceed</Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog
         fullScreen

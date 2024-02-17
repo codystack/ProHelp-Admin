@@ -184,25 +184,6 @@ const ActionButton = ({ selected }) => {
       </SoftBox>
       {renderMenu}
 
-      {/* <Dialog
-        open={openDelete}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={() => setOpenDelete(true)}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{"Delete Company"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            {`Are you sure you want to delete ${selected?.row?.name}\ from database? 
-            Proceed if you are very sure you ou want to delete this company`}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDelete(false)}>Cancel</Button>
-          <Button onClick={deleteCompany}>Yes, proceed</Button>
-        </DialogActions>
-      </Dialog> */}
 
       <Dialog
         fullScreen
@@ -229,7 +210,7 @@ const ActionButton = ({ selected }) => {
               component="div"
               color="#fff"
             >
-              {`${selected?.row?.recruiter?.name}'s Job Summary`}
+              {`${selected?.row?.recruiter?.bio?.firstname} ${selected?.row?.recruiter?.bio?.lastname}'s Job Summary`}
             </Typography>
             <Button autoFocus color="inherit" onClick={() => setOpen(false)}>
               Close

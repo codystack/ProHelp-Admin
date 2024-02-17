@@ -24,9 +24,12 @@ import {
   InputLabel,
   List,
   MenuItem,
+  NativeSelect,
   Select,
   TextField,
   Toolbar,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 import DialogContentText from "@mui/material/DialogContentText";
@@ -83,14 +86,15 @@ const Admins = () => {
   const [isLoading, setLoading] = React.useState(false);
   const [errMsg, setErrMsg] = React.useState("");
   const [isError, setError] = React.useState(false);
-  const [pass, setPass] = React.useState("");
+  const [deviceType, setDeviceType] = React.useState("mobile");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const roles = ["manager", "sales", "analyst", "developer", "operations"];
-  const claims = ["readonly", "read/write", "approve", "disburse"];
+  const roles = ["manager", "developer", "editor"];
+  const claims = ['readonly', 'read/write'];
+  const types = ["admin", "superadmin"];
   const gender = ["male", "female"];
 
   const osName = () => {
@@ -114,18 +118,33 @@ const Admins = () => {
     return os;
   };
 
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.only('xs'));
+  const tablet = useMediaQuery(theme.breakpoints.only('sm'));
+
+  React.useEffect(() => {
+    if (mobile) {
+      setDeviceType('mobile')
+    } else  if (tablet) {
+      setDeviceType('tablet')
+    }
+    else {
+      setDeviceType('pc')
+    }
+  }, [tablet, mobile])
+
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      middleName: "",
-      phoneNumber: "",
-      emailAddress: "",
+      firstname: "",
+      lastname: "",
+      middlename: "",
+      phone: "",
+      email: "",
       password: "",
       gender: "male",
       role: "",
       type: "admin",
-      claim: "",
+      access: "",
     },
     onSubmit: (values) => {
       setLoading(true);
@@ -135,22 +154,28 @@ const Admins = () => {
 
         const payload = {
           ...rest,
-          phoneNumber: `${countryCode}${
-            values?.phoneNumber.charAt(0) === "0"
-              ? values?.phoneNumber.substring(1)
-              : values.phoneNumber
-          }`,
+          bio: {
+            phone: `${countryCode}${
+              values?.phone.charAt(0) === "0"
+                ? values?.phone.substring(1)
+                : values.phone
+            }`,
+            gender: values.gender.toLowerCase(),
+            firstname: values.firstname,
+            lastname: values.lastname,
+            middlename: values.middlename,
+          },
           privilege: {
             type: values.type,
             role: values.role,
-            claim: values.claim,
+            access: values.access,
           },
           device: {
             os: `${osName()}`,
           },
         };
 
-        const response = APIService.post("/admin/create", payload);
+        const response = APIService.post("/admin/new", payload);
 
         toast.promise(response, {
           loading: "Loading",
@@ -195,8 +220,9 @@ const Admins = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Box py={3} display="flex" flexDirection="row" justifyContent="end" alignItems="center">
-        <SoftButton variant="contained" startIcon={<Add />} onClick={() => setOpen(true)}>
+      <Box py={3} display='flex' flexDirection='row' justifyContent='end' alignItems='center'>
+        <SoftButton variant="gradient"
+                color="dark" startIcon={<Add />} onClick={() => setOpen(true)}>
           Create Admin
         </SoftButton>
       </Box>
@@ -211,37 +237,33 @@ const Admins = () => {
       >
         <AppBar
           sx={{ position: "relative", backgroundColor: "#18113c", color: "white" }}
-          color="secondary"
+          color='secondary'
         >
           <Toolbar>
             <IconButton
-              edge="start"
-              color="white"
+              edge='start'
+              color='white'
               onClick={() => setOpen(false)}
-              aria-label="close"
+              aria-label='close'
             >
               <Close />
             </IconButton>
             <Typography
               sx={{ ml: 2, flex: 1, textTransform: "capitalize" }}
-              variant="h6"
-              component="div"
-              color="#fff"
+              variant='h6'
+              component='div'
+              color='#fff'
             >
               {`Create New Admin`}
             </Typography>
-            <SoftButton autoFocus color="inherit" onClick={() => setOpen(false)}>
+            <SoftButton autoFocus color='inherit' onClick={() => setOpen(false)}>
               Close
             </SoftButton>
           </Toolbar>
         </AppBar>
-        {isError && (
-          <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
-            <SoftTypography fontSize={12} sx={{ color: "red" }} pt={4}>
-              {errMsg}
-            </SoftTypography>
-          </Box>
-        )}
+        {
+          deviceType === "mobile" && <Toolbar />
+        }
         <List
           sx={{
             height: "100%",
@@ -251,16 +273,16 @@ const Admins = () => {
             alignItems: "center",
           }}
         >
-          <SoftBox width="50%" component="form" role="form" onSubmit={formik.handleSubmit}>
+          <SoftBox width={deviceType === "pc" ? '60%' : deviceType === "tablet" ? '80%' : "90%"} component='form' role='form' onSubmit={formik.handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6} md={6}>
                 <SoftBox mb={2}>
                   <SoftInput
-                    id="firstName"
-                    name="firstName"
+                    id='firstname'
+                    name='firstname'
                     required
-                    value={formik.values.firstName}
-                    placeholder="First name"
+                    value={formik.values.firstname}
+                    placeholder='First name'
                     onChange={formik.handleChange}
                   />
                 </SoftBox>
@@ -268,11 +290,11 @@ const Admins = () => {
               <Grid item xs={12} sm={6} md={6}>
                 <SoftBox mb={2}>
                   <SoftInput
-                    id="middleName"
-                    name="middleName"
-                    value={formik.values.middleName}
+                    id='middlename'
+                    name='middlename'
+                    value={formik.values.middlename}
                     onChange={formik.handleChange}
-                    placeholder="Middle name"
+                    placeholder='Middle name'
                   />
                 </SoftBox>
               </Grid>
@@ -282,12 +304,12 @@ const Admins = () => {
               <Grid item xs={12} sm={6} md={6}>
                 <SoftBox mb={2}>
                   <SoftInput
-                    id="lastName"
+                    id='lastname'
                     required
-                    name="lastName"
-                    value={formik.values.lastName}
+                    name='lastname'
+                    value={formik.values.lastname}
                     onChange={formik.handleChange}
-                    placeholder="Last name"
+                    placeholder='Last name'
                   />
                 </SoftBox>
               </Grid>
@@ -295,12 +317,12 @@ const Admins = () => {
                 <SoftBox mb={2}>
                   <SoftInput
                     required
-                    id="emailAddress"
-                    name="emailAddress"
-                    value={formik.values.emailAddress}
+                    id='email'
+                    name='email'
+                    value={formik.values.email}
                     onChange={formik.handleChange}
-                    type="email"
-                    placeholder="Email"
+                    type='email'
+                    placeholder='Email'
                   />
                 </SoftBox>
               </Grid>
@@ -312,35 +334,42 @@ const Admins = () => {
                   <p style={{ fontSize: 12 }}>Phone</p>
                   <SoftInput
                     required
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    value={formik.values.phoneNumber}
+                    id='phone'
+                    name='phone'
+                    value={formik.values.phone}
                     onChange={formik.handleChange}
-                    type="phone"
-                    placeholder="Phone number"
+                    type='phone'
+                    placeholder='Phone number'
                   />
                 </SoftBox>
               </Grid>
               <Grid item xs={12} sm={6} md={6}>
                 <Box mb={2}>
                   <FormControl fullWidth>
-                    <p style={{ fontSize: 12 }}>Select gender</p>
+                    <p style={{ fontSize: 12 }}>Gender</p>
                     {/* <InputLabel id="demo-simple-select-label">Gender</InputLabel> */}
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={formik.values.gender}
-                      required
-                      name="gender"
-                      label="Gender"
+                    <NativeSelect
+                      defaultValue={formik.values.gender}
+                      disableUnderline
+                      variant='outlined'
                       onChange={formik.handleChange}
+                      required
+                      fullWidth
+                      sx={{ textTransform: "capitalize" }}
+                      inputProps={{
+                        name: "gender",
+                        id: "gender",
+                        sx: {
+                          minWidth: "100%",
+                        },
+                      }}
                     >
                       {gender?.map((el, index) => (
-                        <MenuItem key={index} value={el}>
-                          {el}
-                        </MenuItem>
+                        <option style={{ textTransform: "capitalize" }} key={index} value={el}>
+                          {`${el}`.toLowerCase()}
+                        </option>
                       ))}
-                    </Select>
+                    </NativeSelect>
                   </FormControl>
                 </Box>
               </Grid>
@@ -351,68 +380,117 @@ const Admins = () => {
                 <Box mb={2}>
                   <FormControl fullWidth>
                     {/* <InputLabel id="demo-simple-select-labe">Role</InputLabel> */}
-                    <p style={{ fontSize: 12 }}>Select role</p>
-                    <Select
-                      labelId="demo-simple-select-labe"
-                      id="demo-simple-select"
-                      value={formik.values.role}
-                      required
-                      name="role"
-                      label="Role"
+                    <p style={{ fontSize: 12 }}>Role</p>
+                    <NativeSelect
+                      defaultValue={formik.values.role}
+                      disableUnderline
+                      variant='outlined'
                       onChange={formik.handleChange}
+                      required
+                      fullWidth
+                      sx={{ textTransform: "capitalize" }}
+                      inputProps={{
+                        name: "role",
+                        id: "role",
+                        sx: {
+                          minWidth: "100%",
+                        },
+                      }}
                     >
                       {roles?.map((el, index) => (
-                        <MenuItem key={index} value={el}>
-                          {el}
-                        </MenuItem>
+                        <option style={{ textTransform: "capitalize" }} key={index} value={el}>
+                          {`${el}`.toLowerCase()}
+                        </option>
                       ))}
-                    </Select>
+                    </NativeSelect>
                   </FormControl>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6} md={6}>
                 <Box mb={2}>
                   <FormControl fullWidth>
-                    {/* <InputLabel id="demo-simple-select-lab">Claim</InputLabel> */}
-                    <p style={{ fontSize: 12 }}>Select claim</p>
-                    <Select
-                      labelId="demo-simple-select-lab"
-                      id="demo-simple-select"
-                      value={formik.values.claim}
-                      name="claim"
-                      label="Claim"
-                      required
+                    <p style={{ fontSize: 12 }}>Select Access</p>
+                    <NativeSelect
+                      defaultValue={formik.values.access}
+                      disableUnderline
+                      variant='outlined'
                       onChange={formik.handleChange}
+                      required
+                      fullWidth
+                      value={formik.values.access}
+                      sx={{ textTransform: "capitalize" }}
+                      inputProps={{
+                        name: "access",
+                        id: "access",
+                        sx: {
+                          minWidth: "100%",
+                        },
+                      }}
                     >
                       {claims?.map((el, index) => (
-                        <MenuItem key={index} value={el}>
-                          {el}
-                        </MenuItem>
+                        <option style={{ textTransform: "capitalize" }} key={index} value={el}>
+                          {`${el}`.toLowerCase()}
+                        </option>
                       ))}
-                    </Select>
+                    </NativeSelect>
                   </FormControl>
                 </Box>
               </Grid>
             </Grid>
 
-            <SoftBox mb={2}>
-              <SoftInput
-                id="password"
-                value={formik.values.password}
-                name="password"
-                type="password"
-                required
-                onChange={formik.handleChange}
-                placeholder="Password"
-              />
-            </SoftBox>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Box mb={2}>
+                  <FormControl fullWidth>
+                    <p style={{ fontSize: 12 }}>Admin Type</p>
+                    <NativeSelect
+                      defaultValue={formik.values.type}
+                      disableUnderline
+                      variant='outlined'
+                      onChange={formik.handleChange}
+                      required
+                      fullWidth
+                      value={formik.values.type}
+                      sx={{ textTransform: "capitalize" }}
+                      inputProps={{
+                        name: "type",
+                        id: "type",
+                        sx: {
+                          minWidth: "100%",
+                        },
+                      }}
+                    >
+                      {types?.map((el, index) => (
+                        <option style={{ textTransform: "capitalize" }} key={index} value={el}>
+                          {`${el}`.toLowerCase()}
+                        </option>
+                      ))}
+                    </NativeSelect>
+                  </FormControl>
+                </Box>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <SoftBox mb={2}>
+                  <p style={{ fontSize: 12 }}>Password</p>
+                  <SoftInput
+                    id='password'
+                    value={formik.values.password}
+                    name='password'
+                    type='password'
+                    required
+                    onChange={formik.handleChange}
+                    placeholder='Password'
+                  />
+                </SoftBox>
+              </Grid>
+            </Grid>
 
             <SoftBox mt={4} mb={1}>
               <SoftButton
                 disabled={isLoading}
-                type="submit"
-                variant="gradient"
-                color="dark"
+                type='submit'
+                variant='gradient'
+                color='dark'
                 fullWidth
               >
                 create admin

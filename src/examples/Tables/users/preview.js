@@ -275,8 +275,8 @@ const Preview = (props) => {
         <Chip
           size="large"
           sx={{ textTransform: "capitalize" }}
-          label={selected?.row?.isVerified ? "Verified" : "Not verified"}
-          color={!selected?.row?.isVerified ? "warning" : "success"}
+          label={selected?.row?.accountStatus }
+          color={selected?.row?.accountStatus !== "active" ? "warning" : "success"}
         />
       </Box>
     </Box>

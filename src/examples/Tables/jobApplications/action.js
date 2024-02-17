@@ -229,7 +229,7 @@ const ActionButton = ({ selected }) => {
               component="div"
               color="#fff"
             >
-              {`${selected?.row?.applicant?.name}'s Job Application Summary`}
+              {`${selected?.row?.applicant?.bio?.firstname} ${selected?.row?.applicant?.bio?.lastname}'s Job Application Summary`}
             </Typography>
             <Button autoFocus color="inherit" onClick={() => setOpen(false)}>
               Close
@@ -241,36 +241,7 @@ const ActionButton = ({ selected }) => {
         </List>
       </Dialog>
 
-      <Dialog
-        fullScreen
-        open={openEdit}
-        onClose={() => setOpenEdit(false)}
-        TransitionComponent={Transition}
-      >
-        <AppBar sx={{ position: "relative", backgroundColor: "#18113c", color: "white" }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={() => setOpenEdit(false)}
-              aria-label="close"
-            >
-              <Close />
-            </IconButton>
-            <Typography
-              sx={{ ml: 2, flex: 1, textTransform: "capitalize" }}
-              variant="h6"
-              component="div"
-            >
-              {`Update ${selected?.row?.name}'s Company Information`}
-            </Typography>
-            <Button autoFocus color="inherit" onClick={() => setOpenEdit(false)}>
-              Close
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <EditCompany setOpen={setOpenEdit} selected={selected} />
-      </Dialog>
+     
     </>
   );
 };

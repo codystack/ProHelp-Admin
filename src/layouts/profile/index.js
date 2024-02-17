@@ -36,16 +36,18 @@ function Overview() {
                     First Name
                   </Typography>
                   <SoftTypography textTransform="capitalize" variant="body2">
-                    {profileData?.firstName}
+                    {profileData?.bio?.firstname || profileData?.bio?.fullname.toString().split(' ')[0]}
                   </SoftTypography>
                 </SoftBox>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <SoftBox>
+              <SoftBox>
                   <Typography fontWeight={600} variant="body2">
-                    Email
+                    Last Name
                   </Typography>
-                  <SoftTypography variant="body2"> {profileData?.emailAddress} </SoftTypography>
+                  <SoftTypography textTransform="capitalize" variant="body2">
+                    {profileData?.bio?.lastname || profileData?.bio?.fullname.toString().split(' ')[1]}
+                  </SoftTypography>
                 </SoftBox>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
@@ -54,7 +56,7 @@ function Overview() {
                     Phone Number
                   </Typography>
                   <SoftTypography textTransform="capitalize" variant="body2">
-                    {profileData?.phoneNumber}
+                    {profileData?.bio?.phone}
                   </SoftTypography>
                 </SoftBox>
               </Grid>
@@ -62,13 +64,11 @@ function Overview() {
             <br />
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6} md={4}>
-                <SoftBox>
+              <SoftBox>
                   <Typography fontWeight={600} variant="body2">
-                    Phone Number
+                    Email
                   </Typography>
-                  <SoftTypography textTransform="capitalize" variant="body2">
-                    {profileData?.phoneNumber}
-                  </SoftTypography>
+                  <SoftTypography variant="body2"> {profileData?.email} </SoftTypography>
                 </SoftBox>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
@@ -78,7 +78,7 @@ function Overview() {
                   </Typography>
                   <SoftTypography textTransform="capitalize" variant="body2">
                     {" "}
-                    {profileData?.gender}{" "}
+                    {profileData?.bio?.gender}{" "}
                   </SoftTypography>
                 </SoftBox>
               </Grid>
@@ -125,9 +125,9 @@ function Overview() {
               <Grid item xs={12} sm={6} md={4}>
                 <SoftBox>
                   <Typography fontWeight={600} variant="body2">
-                    Claim
+                    Access
                   </Typography>
-                  <SoftTypography textTransform="capitalize" variant="body2"> {profileData?.privilege?.claim} </SoftTypography>
+                  <SoftTypography textTransform="capitalize" variant="body2"> {profileData?.privilege?.access} </SoftTypography>
                 </SoftBox>
               </Grid>
             </Grid>

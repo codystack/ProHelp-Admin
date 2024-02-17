@@ -12,8 +12,6 @@ import CustomNoRowsOverlay from "../../../components/no_data/custom_no_row";
 import ActionButton from "./action";
 import { useSelector } from "react-redux";
 import { Avatar, Chip } from "@mui/material";
-import SoftTypography from "components/SoftTypography";
-import formatCurrency from "utils/formatCurrency";
 
 function CustomToolbar() {
   return (
@@ -33,17 +31,17 @@ export default function AdminsTable() {
       headerName: "Photo",
       width: 70,
       renderCell: (params) => (
-        <Avatar src={params?.row?.photoUrl} variant="circular">
-          {params?.row?.user?.firstName}
+        <Avatar src={params?.row?.bio?.image} variant="circular">
+          {params?.row?.bio?.firstname}
         </Avatar>
       ),
     },
     {
       field: "fullName",
       headerName: "FullName",
-      width: 150,
+      width: 185,
       renderCell: (params) => (
-        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{params?.row?.fullName}</p>
+        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{`${params?.row?.bio?.firstname} ${params?.row?.bio?.middlename} ${params?.row?.bio?.lastname}`}</p>
       ),
     },
     {
@@ -51,20 +49,20 @@ export default function AdminsTable() {
       headerName: "Gender",
       width: 80,
       renderCell: (params) => (
-        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{params?.row?.gender}</p>
+        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{params?.row?.bio?.gender}</p>
       ),
     },
     {
       field: "emailAddress",
       headerName: "Email",
-      renderCell: (params) => <p style={{ fontSize: 14 }}>{params?.row?.emailAddress}</p>,
-      width: 150,
+      renderCell: (params) => <p style={{ fontSize: 14 }}>{params?.row?.email}</p>,
+      width: 200,
     },
     {
       field: "phoneNumber",
       headerName: "Phone",
       renderCell: (params) => (
-        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{`${params?.row?.phoneNumber}`}</p>
+        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{`${params?.row?.bio?.phone}`}</p>
       ),
       width: 135,
     },
@@ -95,15 +93,7 @@ export default function AdminsTable() {
       renderCell: (params) => (
         <p
           style={{ textTransform: "capitalize", fontSize: 14 }}
-        >{`${params?.row?.privilege?.claim}`}</p>
-      ),
-    },
-    {
-      field: "countryCode",
-      headerName: "Country",
-      width: 80,
-      renderCell: (params) => (
-        <p style={{ textTransform: "capitalize", fontSize: 14 }}>{`${params?.row?.countryCode}`}</p>
+        >{`${params?.row?.privilege?.access}`}</p>
       ),
     },
     {
@@ -132,6 +122,8 @@ export default function AdminsTable() {
   ];
 
   const { admins } = useSelector((state) => state.admin);
+
+  console.log("ADMIN DATA HERE :::: ", admins);
 
   return (
     <div style={{ height: "70vh", width: "100%" }}>

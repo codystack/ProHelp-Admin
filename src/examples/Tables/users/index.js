@@ -293,6 +293,19 @@ export default function UsersTable() {
       ),
     },
     {
+      field: "isVerified",
+      headerName: "Is Verified",
+      width: 90,
+      renderCell: (params) => (
+        <Chip
+          size="small"
+          sx={{ textTransform: "capitalize" }}
+          label={params?.row?.isVerified ? "Verified" : "Not verified"}
+          color={params?.row?.isVerified ? "success" : "warning"}
+        />
+      ),
+    },
+    {
       field: "nin",
       headerName: "NIN",
       width: 110,
@@ -313,19 +326,17 @@ export default function UsersTable() {
       ),
     },
     {
-      field: "isVerified",
-      headerName: "Is Verified",
+      field: "status",
+      headerName: "Status",
       width: 90,
       renderCell: (params) => (
         <Chip
           size="small"
           sx={{ textTransform: "capitalize" }}
-          label={params?.row?.isVerified ? "Verified" : "Not verified"}
-          color={params?.row?.isVerified ? "success" : "warning"}
+          label={params?.row?.accountStatus}
+          color={params?.row?.accountStatus !== "active" ? "warning" : "success"}
         />
       ),
-
-      //   width: 520,
     },
     {
       field: "id",
@@ -479,7 +490,7 @@ export default function UsersTable() {
           columns={columns}
           paginationMode="server"
           pageSizeOptions={[25]}
-          rowCount={count}
+          rowCount={users?.totalDocs}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           loading={loading}
@@ -489,6 +500,6 @@ export default function UsersTable() {
           }}
         />
       )}
-    </div>
+    </div> 
   );
 }

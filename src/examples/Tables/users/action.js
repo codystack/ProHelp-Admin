@@ -2,34 +2,23 @@ import React from "react";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 
-import MoreVertIcon from "@mui/icons-material/MoreVertRounded";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Fade from "@mui/material/Fade";
 
 // import { useSnackbar } from "notistack";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@mui/styles";
 import { setLoading } from "../../../redux/slices/backdrop";
-import Box from "@mui/system/Box";
-import Edit from "@mui/icons-material/Edit";
-import Delete from "@mui/icons-material/Delete";
 import { PropTypes } from "prop-types";
 import SoftBox from "components/SoftBox";
 import {
   AppBar,
-  Avatar,
   Dialog,
   DialogActions,
   DialogContent,
-  Divider,
-  Grid,
   Icon,
   List,
-  ListItem,
   Toolbar,
 } from "@mui/material";
 
@@ -79,11 +68,7 @@ const ActionButton = ({ selected }) => {
   const openAction = Boolean(anchorEl);
   //   const { enqueueSnackbar } = useSnackbar();
   const { profileData } = useSelector((state) => state.profile);
-  const handleMoreAction = (e) => setAnchorEl(e.currentTarget);
 
-  const handleCloseMoreAction = () => {
-    setAnchorEl(null);
-  };
 
   const handleClickOpen = () => {
     closeMenu();
@@ -109,33 +94,15 @@ const ActionButton = ({ selected }) => {
       open={Boolean(menu)}
       onClose={closeMenu}
     >
-      {profileData && profileData?.privilege?.claim === "read/write" && (
-        <>
-          {/* {selected?.row?.loan && selected?.row?.loan?.status === "pending" && (
-            <>
-              <MenuItem onClick={handleClickOpen}>{"Approve Loan"}</MenuItem>
-              <MenuItem
-                onClick={() => {
-                  closeMenu();
-                  setOpenDelete(true);
-                }}
-              >
-                {"Decline Loan"}
-              </MenuItem>
-            </>
-          )} */}
-          {/* {selected?.row?.loan && selected?.row?.loan?.status === "approved" && (
-            <>
-              <MenuItem onClick={handleClickOpen}>{`Credit ${selected?.row?.fullName}`}</MenuItem>
-              <MenuItem onClick={() => setOpenDelete(true)}>{"Decline"}</MenuItem>
-            </>
-          )} */}
+      {profileData && profileData?.privilege?.access === "read/write" && (
+        <div>
+          
           {selected?.row?.accountStatus !== "frozen" ? (
             <MenuItem onClick={handleClickOpen}>{`Freeze Account`}</MenuItem>
           ) : (
             <MenuItem onClick={handleClickOpen}>{`Unfreeze Account`}</MenuItem>
           )}
-        </>
+        </div>
       )}
 
       <MenuItem
@@ -148,89 +115,6 @@ const ActionButton = ({ selected }) => {
       </MenuItem>
     </Menu>
   );
-  //   []?.
-
-  const approveLoan = async () => {
-    handleClose();
-    dispatch(setLoading(true));
-    const payload = { ...selected?.row, status: "approved" };
-
-    // console.log("NEW PAYLOAD ", payload);
-    try {
-      let response = APIService.update("/admin/loan/update", "", payload);
-
-      toast.promise(response, {
-        loading: "Loading",
-        success: (res) => {
-          dispatch(setLoading(false));
-          mutate("/loan/all");
-          return `Loan approved successfully`;
-        },
-        error: (err) => {
-          console.log("ERROR HERE >>> ", `${err}`);
-          dispatch(setLoading(false));
-          return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
-        },
-      });
-    } catch (error) {
-      dispatch(setLoading(false));
-      console.log("ERROR ASYNC HERE >>> ", `${error}`);
-    }
-  };
-
-  const creditLoan = async () => {
-    setOpenDelete(false);
-    dispatch(setLoading(true));
-    const payload = { ...selected?.row, status: "credited" };
-
-    try {
-      let response = APIService.update("/admin/loan/update", "", payload);
-
-      toast.promise(response, {
-        loading: "Loading",
-        success: (res) => {
-          dispatch(setLoading(false));
-          mutate("/loan/all");
-          return `Loan credited successfully`;
-        },
-        error: (err) => {
-          console.log("ERROR HERE >>> ", `${err}`);
-          dispatch(setLoading(false));
-          return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
-        },
-      });
-    } catch (error) {
-      dispatch(setLoading(false));
-      console.log("ERROR ASYNC HERE >>> ", `${error}`);
-    }
-  };
-
-  const declineLoan = () => {
-    handleClose();
-    dispatch(setLoading(true));
-    const payload = { ...selected?.row, status: "denied" };
-
-    try {
-      let response = APIService.update("/admin/loan/update", "", payload);
-
-      toast.promise(response, {
-        loading: "Loading",
-        success: (res) => {
-          dispatch(setLoading(false));
-          mutate("/loan/all");
-          return `Loan credited successfully`;
-        },
-        error: (err) => {
-          console.log("ERROR HERE >>> ", `${err}`);
-          dispatch(setLoading(false));
-          return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
-        },
-      });
-    } catch (error) {
-      dispatch(setLoading(false));
-      console.log("ERROR ASYNC HERE >>> ", `${error}`);
-    }
-  };
 
   const freezeAccount = () => {
     handleClose();
@@ -312,8 +196,8 @@ const ActionButton = ({ selected }) => {
           <DialogContentText id="alert-dialog-slide-description" sx={{ fontSize: 14 }}>
             {`${
               selected?.row?.accountStatus === "frozen"
-                ? `Are you sure you want to unfreeze ${selected?.row?.firstName}'s account?`
-                : `Are you sure you want to freeze ${selected?.row?.firstName}'s account?`
+                ? `Are you sure you want to unfreeze ${selected?.row?.bio?.firstname} ${selected?.row?.bio?.lastname}'s account?`
+                : `Are you sure you want to freeze ${selected?.row?.bio?.firstname} ${selected?.row?.bio?.lastname}'s account?`
             }`}
           </DialogContentText>
         </DialogContent>
@@ -327,25 +211,6 @@ const ActionButton = ({ selected }) => {
         </DialogActions>
       </Dialog>
 
-      <Dialog
-        open={openDelete}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={() => setOpenDelete(true)}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{"Decline Loan Request"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            {`Are you sure you want to decline ${selected?.row?.user?.firstName}\'s loan request? 
-            Proceed if you are very sure you ou want to decline this loan request`}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDelete(false)}>Cancel</Button>
-          <Button onClick={declineLoan}>Yes, proceed</Button>
-        </DialogActions>
-      </Dialog>
 
       <Dialog
         fullScreen
@@ -369,7 +234,7 @@ const ActionButton = ({ selected }) => {
               component="div"
               color="#fff"
             >
-              {`${selected?.row?.bio?.firstname} ${selected?.row?.bio?.middlename} ${selected?.row?.bio?.lastname}'s Profile`}
+              {`${selected?.row?.bio.firstname} ${selected?.row?.bio.lastname}'s Profile`}
             </Typography>
             <Button autoFocus color="inherit" onClick={() => setOpen(false)}>
               Close
@@ -382,6 +247,7 @@ const ActionButton = ({ selected }) => {
       </Dialog>
     </>
   );
+
 };
 
 // Typechecking props for the ActionButton

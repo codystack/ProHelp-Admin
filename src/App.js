@@ -62,6 +62,7 @@ import { setBanners } from "redux/slices/cms";
 import { setFAQs } from "redux/slices/cms";
 import useSection from "hooks/useSection";
 import { setSections } from "redux/slices/cms";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -84,6 +85,8 @@ export default function App() {
   const dispatcher = useDispatch();
   const { profileData, isAuth } = useSelector((state) => state.profile);
   const { isLoading } = useSelector((state) => state.loading);
+
+  console.log("ADMINS :::---::: ",  adminsData);
 
   // const { isAuth, profile } = useSelector((state) => state.auth);
 
@@ -218,10 +221,23 @@ export default function App() {
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isLoading}
-        // onClick={handleClose}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+      <Toaster
+        position='top-center'
+        reverseOrder={false}
+        gutter={8}
+        toastOptions={{
+          duration: 5000,
+          success: {
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
       <CssBaseline />
       {isAuth ? (
         layout === "dashboard" && (

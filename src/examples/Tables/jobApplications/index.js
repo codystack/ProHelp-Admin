@@ -16,13 +16,14 @@ import { toast } from "react-hot-toast";
 import { Avatar, Button } from "@mui/material";
 import { FileDownload } from "@mui/icons-material";
 import xlsx from "json-as-xlsx";
+import useJobApplications from "hooks/useJobApplication";
 
 export default function JobApplicationsTable() {
   const { jobApplications } = useSelector((state) => state.job);
 
   const [loading, setLoading] = React.useState(false);
   const [count, setCount] = React.useState(jobApplications?.totalDocs ?? 0);
-  const [filteredJobs, setFilteredJobs] = React.useState(
+  const [filteredJobApplications, setFilteredJobApplications] = React.useState(
     jobApplications?.docs ?? []
   );
 
@@ -31,11 +32,13 @@ export default function JobApplicationsTable() {
     pageSize: 25,
   });
 
-  const { data: jobData } = useJobs(paginationModel.page + 1);
+  console.log("JBDK KHD :::::", jobApplications?.docs);
+
+  const { data: jobApplicationData } = useJobApplications(paginationModel.page + 1);
 
   React.useEffect(() => {
     if (jobApplications) {
-      setFilteredJobs(jobApplications?.docs);
+      setFilteredJobApplications(jobApplications?.docs);
     }
   }, [jobApplications]);
 
@@ -43,66 +46,57 @@ export default function JobApplicationsTable() {
     {
       field: "photo",
       headerName: "Image",
-      width: 125,
+      width: 100,
       renderCell: (params) => (
-        <Avatar src={params?.row?.applicant?.photo} variant="rounded" />
+        <Avatar src={params?.row?.applicant?.bio?.image} variant="rounded" />
       ),
     },
     {
       field: "name",
       headerName: "Applicant",
-      width: 125,
+      width: 135,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.applicant?.name}
+          {`${params?.row?.applicant?.bio?.firstname} ${params?.row?.applicant?.bio?.lastname}`}
         </p>
       ),
     }, 
     {
       field: "email",
-      headerName: "Applicant's Email",
-      width: 135,
+      headerName: "Email Address",
+      width: 175,
       renderCell: (params) => (
         <p style={{ fontSize: 14 }}>{params?.row?.applicant?.email}</p>
       ),
     },
     {
       field: "phone",
-      headerName: "Applicant's Phone",
+      headerName: "Phone Number",
       width: 125,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.applicant?.phone}
+          {params?.row?.applicant?.bio?.phone}
         </p>
       ),
     },
     {
       field: "recruiter",
       headerName: "Recruiter",
-      width: 120,
+      width: 160,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.jobData?.recruiter?.name}
+          {`${params?.row?.job?.recruiter?.bio?.firstname} ${params?.row?.job?.recruiter?.bio?.lastname}`}
         </p>
       ),
     },
-    {
-      field: "jobId",
-      headerName: "Job ID",
-      width: 140,
-      renderCell: (params) => (
-        <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.jobId}
-        </p>
-      ),
-    },
+    
     {
       field: "jobTitle",
       headerName: "Job Title",
       width: 120,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.jobData?.jobTitle}
+          {params?.row?.job?.jobTitle}
         </p>
       ),
     },
@@ -111,7 +105,7 @@ export default function JobApplicationsTable() {
       headerName: "Profession",
       width: 140,
       renderCell: (params) => (
-        <p style={{ fontSize: 14, textTransform: 'capitalize' }}>{params?.row?.jobData?.profession}</p>
+        <p style={{ fontSize: 14, textTransform: 'capitalize' }}>{params?.row?.job?.profession?.name}</p>
       ),
     },
     {
@@ -120,7 +114,7 @@ export default function JobApplicationsTable() {
       width: 145,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.jobData?.company}
+          {params?.row?.job?.company}
         </p>
       ),
     },
@@ -130,7 +124,7 @@ export default function JobApplicationsTable() {
       width: 110,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.jobData?.workplaceType}
+          {params?.row?.job?.workplaceType}
         </p>
       ),
     },
@@ -140,13 +134,13 @@ export default function JobApplicationsTable() {
       width: 90,
       renderCell: (params) => (
         <p style={{ textTransform: "capitalize", fontSize: 14 }}>
-          {params?.row?.jobData?.jobType}
+          {params?.row?.job?.jobType}
         </p>
       ),
     },
     {
       field: "status",
-      headerName: "Job Status",
+      headerName: "Status",
       width: 100,
       renderCell: (params) => (
         <p
@@ -171,9 +165,9 @@ export default function JobApplicationsTable() {
         { label: "Applicant", value: (row) => row.applicant?.name },
         { label: "Applicant's Email", value: (row) => row.applicant?.email },
         { label: "Applicant's Phone", value: (row) => row.applicant?.phone },
-        { label: "Recruiter Name", value: (row) => row.job?.recruiter?.name },
+        { label: "Recruiter Name", value: (row) => row.job?.recruiter?.bio?.firstname+ " "+ row.job?.recruiter?.bio?.lastname },
         { label: "Recruiter Email", value: (row) => row.job?.recruiter?.email },
-        { label: "Recruiter Phone", value: (row) => row.job?.recruiter?.phone },
+        { label: "Recruiter Phone", value: (row) => row.job?.recruiter?.bio?.phone },
         { label: "Job Title", value: (row) => row.job?.jobTitle },
         { label: "Job Type", value: (row) => row.job?.jobType },
         { label: "Workplace Type", value: (row) => row.job?.workplaceType },
@@ -231,24 +225,21 @@ export default function JobApplicationsTable() {
 
     (async () => {
       setLoading(true);
-      // const newData = await loadServerRows(paginationModel.page, data);
-      if (jobData) {
-        // console.log("SECOND PAGE DATA", requestData);
-        setFilteredJobs(jobData?.docs);
+      if (jobApplicationData) {
+        setFilteredJobApplications(jobApplicationData?.docs);
       }
 
       if (!active) {
         return;
       }
 
-      // setFilteredRequests(data)
       setLoading(false);
     })();
 
     return () => {
       active = false;
     };
-  }, [paginationModel.page, jobData]);
+  }, [paginationModel.page, jobApplicationData]);
 
   return (
     <div style={{ height: "75vh", width: "100%" }}>

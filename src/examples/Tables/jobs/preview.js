@@ -2,7 +2,6 @@ import React from "react";
 import { PropTypes } from "prop-types";
 import { Avatar, Grid, Toolbar, Typography } from "@mui/material";
 import Box from "@mui/system/Box";
-import formatCurrency from "utils/formatCurrency";
 
 const Preview = (props) => {
   let { selected } = props;
@@ -18,7 +17,7 @@ const Preview = (props) => {
       <Avatar
         size="large"
         sx={{ width: 128, height: 128, borderRadius: 64 }}
-        src={selected?.row?.recruiter?.photo}
+        src={selected?.row?.recruiter?.bio?.image}
       />
       <br />
 
@@ -114,7 +113,7 @@ const Preview = (props) => {
             <Typography variant="h6" fontWeight={600}>
               PROFESSION
             </Typography>
-            <p style={{ fontSize: 14 }}>{selected?.row?.profession}</p>
+            <p style={{ fontSize: 14 }}>{selected?.row?.profession?.name}</p>
           </Box>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>

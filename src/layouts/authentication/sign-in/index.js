@@ -57,35 +57,50 @@ function SignIn(props) {
       toast.promise(response, {
         loading: "Loading",
         success: (res) => {
-          localStorage.setItem("accessToken", res?.data?.token);
-          localStorage.setItem("refreshToken", res?.data?.token);
+          // Check if account is disabled
+          if (res?.data?.data?.accountStatus !== "active") {
+            localStorage.setItem("accessToken", "");
+            localStorage.setItem("refreshToken", "");
+            localStorage.setItem("auth-email", "");
+            return "Your account is on hold";
+          } else {
+            localStorage.setItem("accessToken", res?.data?.token);
+            localStorage.setItem("refreshToken", res?.data?.token);
+            localStorage.setItem("auth-email", res?.data?.data?.email);
 
-          dispatch(setProfile(res?.data?.data));
-          dispatch(setAuth(true));
+            dispatch(setProfile(res?.data?.data));
+            dispatch(setAuth(true));
 
-          mutate();
-
-          // console.log("PROFILE DATA >> ", data);
-          setTimeout(() => {
             mutate();
-            dispatch(setLoading(false));
-            // console.log("PROFILE DATA >> ", data);
-            // navigate("/dashboard");
-          }, 5000);
 
-          return "Login successful!";
+            // console.log("PROFILE DATA >> ", data);
+            setTimeout(() => {
+              mutate();
+              dispatch(setLoading(false));
+              // console.log("PROFILE DATA >> ", data);
+              // navigate("/dashboard");
+            }, 5000);
+
+            return res?.data?.message || "Login successful!";
+          }
         },
         error: (err) => {
           // console.log("err", err);
           dispatch(setLoading(false));
           // toast.error("DFDjhj");
-          return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
+          return (
+            err?.response?.data?.message ||
+            err?.message ||
+            "Something went wrong, try again."
+          );
         },
       });
     } catch (error) {
       dispatch(setLoading(false));
       console.log(
-        error?.response?.data?.message || error?.message || "Something went wrong, try again."
+        error?.response?.data?.message ||
+          error?.message ||
+          "Something went wrong, try again."
       );
     }
   };
@@ -100,7 +115,11 @@ function SignIn(props) {
       <SoftBox component="form" role="form" onSubmit={handleSubmit}>
         <SoftBox mb={2}>
           <SoftBox mb={1} ml={0.5}>
-            <SoftTypography component="label" variant="caption" fontWeight="bold">
+            <SoftTypography
+              component="label"
+              variant="caption"
+              fontWeight="bold"
+            >
               Email
             </SoftTypography>
           </SoftBox>
@@ -115,7 +134,11 @@ function SignIn(props) {
         </SoftBox>
         <SoftBox mb={2}>
           <SoftBox mb={1} ml={0.5}>
-            <SoftTypography component="label" variant="caption" fontWeight="bold">
+            <SoftTypography
+              component="label"
+              variant="caption"
+              fontWeight="bold"
+            >
               Password
             </SoftTypography>
           </SoftBox>
@@ -126,7 +149,7 @@ function SignIn(props) {
             required
             type="password"
             placeholder="Password"
-          /> 
+          />
         </SoftBox>
         <SoftBox display="flex" alignItems="center">
           <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -140,7 +163,12 @@ function SignIn(props) {
           </SoftTypography>
         </SoftBox>
         <SoftBox mt={4} mb={1}>
-          <SoftButton disable={isLoading} variant="gradient" color="info" type="submit">
+          <SoftButton
+            disable={isLoading}
+            variant="gradient"
+            color="info"
+            type="submit"
+          >
             sign in
           </SoftButton>
         </SoftBox>
