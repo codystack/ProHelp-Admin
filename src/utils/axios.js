@@ -1,11 +1,11 @@
 import axios from "axios";
 import { APP_KEY } from "config";
 
-// console.info('BASE_URL: ->', process.env.REACT_APP_BASE_URL);
+
+/*  "http://192.168.105.247:8082/api",     */
 
 const axiosInstance = axios.create({
-  baseURL: "http://192.168.105.247:8082/api", 
-  /*   "https://my-prohelp-server.vercel.app/api",   */
+  baseURL: "https://my-prohelp-server.vercel.app/api", 
   headers: {
     "Content-Type": "application/json",
     "secret-key": APP_KEY,
