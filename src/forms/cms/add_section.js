@@ -72,7 +72,7 @@ export default function AddSectionForm({ setOpen }) {
     
     return uploadTask.then((res) => getDownloadURL(storageRef));
   };
-
+ 
   // Function to handle multiple file uploads using Promise.all
   const uploadMultipleFiles = (files) => {
     const uploadPromises = files.map(uploadFile);
