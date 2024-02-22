@@ -63,6 +63,13 @@ import { setFAQs } from "redux/slices/cms";
 import useSection from "hooks/useSection";
 import { setSections } from "redux/slices/cms";
 import { Toaster } from "react-hot-toast";
+import useProfessions from "hooks/useProfession";
+import { setCategory } from "redux/slices/categories";
+import { setCategories } from "redux/slices/categories";
+import useLegal from "hooks/useLegal";
+import { setPolicy } from "redux/slices/legal";
+import { setLegal } from "redux/slices/legal";
+import { setTerms } from "redux/slices/legal";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -78,6 +85,8 @@ export default function App() {
   const { data: sectionData,  } = useSection(1);
   const { data: jobApplicationData } = useJobApplications(1);
   const { data: faqData } = useFAQ(1);
+  const { data: legalData } = useLegal();
+  const { data: professionData } = useProfessions();
   const { data: supportData, mutate: supportMutate } = useSupport();
   const { data: usersData, mutate: usersMutate } = useUsers(1);
   const { data: adminsData, mutate: adminsMutate } = useAdmins();
@@ -86,7 +95,7 @@ export default function App() {
   const { profileData, isAuth } = useSelector((state) => state.profile);
   const { isLoading } = useSelector((state) => state.loading);
 
-  console.log("ADMINS :::---::: ",  adminsData);
+  console.log("LEGAL :::---::: ",  legalData);
 
   // const { isAuth, profile } = useSelector((state) => state.auth);
 
@@ -130,7 +139,15 @@ export default function App() {
     if (jobApplicationData) {
       dispatcher(setJobApplications(jobApplicationData));
     }
-  }, [dispatcher, supportData, jobData, jobApplicationData, bannerData, faqData, sectionData]);
+    if (professionData) {
+      dispatcher(setCategories(professionData?.docs));
+    }
+    if (legalData) {
+      dispatcher(setPolicy(legalData?.docs[0]?.privacy))
+      dispatcher(setTerms(legalData?.docs[0]?.terms))
+      dispatcher(setLegal(legalData?.docs[0]))
+    }
+  }, [dispatcher, supportData, jobData, jobApplicationData, bannerData, faqData, sectionData, professionData, legalData]);
 
   useEffect(() => {
     if (usersData) {

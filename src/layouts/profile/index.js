@@ -16,7 +16,6 @@ import PlatformSettings from "layouts/profile/components/PlatformSettings";
 
 import { Box, Divider, Toolbar, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import logo from "../../assets/images/fast-logos/favicon.png";
 
 function Overview() {
   const { currentTab } = useSelector((state) => state.setting);

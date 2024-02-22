@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import loanReducer from "./slices/loans";
+import legalReducer from "./slices/legal";
 import profileReducer from "./slices/profile";
 import loadingReducer from "./slices/backdrop";
 import transactionReducer from "./slices/transactions";
@@ -10,10 +10,11 @@ import jobReducer from "./slices/jobs";
 import settingReducer from "./slices/settings";
 import cardReducer from "./slices/cards";
 import cmsReducer from "./slices/cms"
+import categoryReducer from "./slices/categories"
 
 export default configureStore({
   reducer: {
-    loan: loanReducer,
+    legal: legalReducer,
     profile: profileReducer,
     loading: loadingReducer,
     transaction: transactionReducer,
@@ -23,7 +24,8 @@ export default configureStore({
     job: jobReducer,
     setting: settingReducer,
     card: cardReducer,
-    cms: cmsReducer
+    cms: cmsReducer,
+    category: categoryReducer,
   },
 });
 

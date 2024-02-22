@@ -25,6 +25,7 @@ import Admins from "pages/admins";
 import Jobs from "pages/jobs";
 import Applications from "pages/applications";
 import CMS from "pages/cms";
+import Categories from "pages/categories";
 // import Requests from "pages/requests";
 
 const routes = [
@@ -73,15 +74,15 @@ const routes = [
     component: <Support />,
     noCollapse: true,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Companies",
-  //   key: "companies",
-  //   route: "/companies",
-  //   icon: <Settings size="12px" />,
-  //   component: <Companies />,
-  //   noCollapse: true,
-  // },
+  {
+    type: "collapse",
+    name: "Categories",
+    key: "categories",
+    route: "/categories",
+    icon: <Settings size="12px" />,
+    component: <Categories />,
+    noCollapse: true,
+  },
   { type: "title", title: "Account", key: "account-pages" },
   {
     type: "collapse",

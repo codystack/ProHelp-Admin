@@ -12,12 +12,13 @@ import {
   MenuItem,
   NativeSelect,
   Select,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "redux/slices/backdrop";
-import { CameraAlt } from "@mui/icons-material";
+import { CameraAlt, Cancel } from "@mui/icons-material";
 import { ref } from "firebase/storage";
 import {
   storage,
@@ -27,26 +28,26 @@ import {
 import APIService from "service";
 import { mutate } from "swr";
 import toast from "react-hot-toast";
-import { setBanners } from "redux/slices/cms";
 
-export default function AddBannerForm({ setOpen }) {
+export default function AddCategoryForm({ setOpen }) {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile.profileData);
 
   const pickerRef = React.useRef();
+  const skillsRef = React.useRef();
   const [mfile, setMFile] = React.useState(null);
   const [previewImage, setPreviewImage] = React.useState("");
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required("Banner title is required"),
-    page: Yup.string().required("Banner placement is required"),
+    name: Yup.string().required("Title is required"),
+    skills: Yup.array().required("Skills are required"),
     description: Yup.string().nullable(),
   });
 
   const formik = useFormik({
     initialValues: {
-      page: "",
-      title: "",
+      name: "",
+      skills: [],
       description: "",
     },
     validationSchema,
@@ -55,7 +56,7 @@ export default function AddBannerForm({ setOpen }) {
       try {
         // Send image to Firebase storage first
         const timeNow = new Date().getTime();
-        const storageRef = ref(storage, "banners/" + values.title);
+        const storageRef = ref(storage, "professions/" + values.name);
         const uploadTask = uploadBytesResumable(storageRef, mfile);
 
         uploadTask.on(
@@ -70,50 +71,50 @@ export default function AddBannerForm({ setOpen }) {
             console.log(error);
           },
           () => {
-            getDownloadURL(uploadTask.snapshot.ref).then(
-              async (downloadURL) => {
+            getDownloadURL(uploadTask.snapshot.ref)
+              .then(async (downloadURL) => {
                 const payload = {
-                  page: values.page,
-                  title: values.title,
-                  featuredImage: downloadURL,
+                  name: values.name,
+                  image: downloadURL,
+                  skills: values.skills,
                   description: values.description,
                 };
 
-                console.log("PAYLOAD HERE:: ", payload);
+                const res = await APIService.post(
+                  "/profession/create",
+                  payload
+                );
 
-               
-                  const res = await APIService.post(
-                    "/cms/banners/add",
-                    payload
-                  );
-
-                  console.log("RESP HERE >>> ", `${res}`);
-                  mutate("/banners/all/");
-                  setOpen(false);
-
-                  const resp = await APIService.fetcher("/banners/all/");
-                  dispatch(setLoading(false))
-                  dispatch(setBanners(resp?.docs));
-
-                  toast.success("Operation successful");
-           
-              }
-            ).catch((error) => {
                 dispatch(setLoading(false));
-                toast.error(error?.message);
-                console.log("ERROR HERE >>> ", `${error?.message || error?.response?.message}`);
+
+                console.log("RESP HERE >>> ", `${res}`);
+                setOpen(false);
+                mutate("/profession/all/");
                 
-            });
+
+                toast.success("Operation successful");
+              })
+              .catch((error) => {
+                dispatch(setLoading(false));
+                console.log(
+                  "ERROR HERE >>> ",
+                  `${error?.message || error?.response?.message}`
+                );
+              });
           }
         );
       } catch (error) {
-        toast.error("Page already");
         dispatch(setLoading(false));
       }
     },
   });
 
-  const { errors, getFieldProps, handleSubmit, touched } = formik;
+  const { errors, getFieldProps, handleSubmit, touched, values, setFieldValue } = formik;
+
+  const handleDelete = (value) => {
+    const newSkills = values?.skills?.filter((val) => val !== value);
+    setFieldValue('skills', newSkills)
+  };
 
   return (
     <Box
@@ -134,13 +135,13 @@ export default function AddBannerForm({ setOpen }) {
       <TextField
         variant="outlined"
         fullWidth
-        {...getFieldProps("title")}
-        label="Banner Title"
-        placeholder="Enter the banner title"
+        {...getFieldProps("name")}
+        label="Category Name"
+        placeholder="Enter the category name"
         required
         size="large"
-        error={Boolean(touched.title && errors.title)}
-        helperText={errors.title}
+        error={Boolean(touched.name && errors.name)}
+        helperText={errors.name}
       />
       <br />
       <TextField
@@ -149,41 +150,39 @@ export default function AddBannerForm({ setOpen }) {
         multiline
         minRows={5}
         {...getFieldProps("description")}
-        label="Banner Description"
-        placeholder="Enter the banner title"
+        label="Description"
+        placeholder="Enter the category description"
         required
         error={Boolean(touched.description && errors.description)}
         helperText={errors.description}
       />
       <br />
-      <FormControl fullWidth error={Boolean(touched.page && errors.page)}>
-        <p style={{ fontSize: 14 }}>Select Page</p>
-        <NativeSelect
-          defaultValue={formik.values.page}
-          disableUnderline
-          variant="outlined"
-          onChange={formik.handleChange}
-          required
+      <TextField
+          inputRef={skillsRef}
           fullWidth
-          value={formik.values.page}
-          sx={{ textTransform: "capitalize" }}
-          inputProps={{
-            name: "page",
-            id: "Page",
-            sx: {
-              minWidth: "100%",
-            },
+          variant="outlined"
+          size="small"
+          margin="none"
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+                // Handle saving the value here
+                setFieldValue('skills', [...values.skills, event?.target?.value])
+                skillsRef.current.value = "";
+              }
           }}
-        >
-          {["home", "explore", "faq"].map((el, index) => (
-            <option style={{ textTransform: "capitalize" }} key={el} value={el}>
-              {`${el}`}
-            </option>
-          ))}
-        </NativeSelect>
-        <FormHelperText>{errors.page}</FormHelperText>
-      </FormControl>
-
+          placeholder={values.skills.length < 5 ? "Enter skill. Press 'Enter' to save" : ""}
+          InputProps={{
+            startAdornment: (
+              <Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
+                {values?.skills?.map((data, index) => {
+                  return (
+                    <Tags data={data} handleDelete={handleDelete} key={index} />
+                  );
+                })}
+              </Box>
+            ),
+          }}
+        />
       <br />
       <br />
       <Button
@@ -276,6 +275,33 @@ const AvatrBox = ({ pickerRef, previewImage, setPreviewImage, setMFile }) => {
       <Typography fontSize={14} p={2}>
         Featured Image
       </Typography>
+    </Box>
+  );
+};
+
+const Tags = ({ data, handleDelete }) => {
+  return (
+    <Box
+      sx={{
+        background: "#283240",
+        height: "100%",
+        display: "flex",
+        padding: "0.1rem",
+        margin: "0.2rem 0 0",
+        justifyContent: "center",
+        alignContent: "center",
+        color: "#ffffff",
+      }}
+    >
+      <Stack direction="row" gap={0.5}>
+        <Typography fontSize={14} lineHeight={1.1} >{data}</Typography>
+        <Cancel
+          sx={{ cursor: "pointer" }}
+          onClick={() => {
+            handleDelete(data);
+          }}
+        />
+      </Stack>
     </Box>
   );
 };

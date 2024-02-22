@@ -112,6 +112,19 @@ export default function AdminsTable() {
       ),
     },
     {
+      field: "status",
+      headerName: "Status",
+      width: 90,
+      renderCell: (params) => (
+        <Chip
+          size="small"
+          sx={{ textTransform: "capitalize" }}
+          label={params?.row?.accountStatus}
+          color={params?.row?.accountStatus !== "active" ? "warning" : "success"}
+        />
+      ),
+    },
+    {
       field: "id",
       headerName: "Action",
       width: 90,

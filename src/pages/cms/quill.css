@@ -1,0 +1,15 @@
+.ql-toolbar {
+    border: none;
+    outline: none;
+  }
+  .ql-container {
+    border: none;
+  }
+  .ql-editor {
+    border: none;
+  }
+  .quill {
+    border: none;
+  }
+  .ql-container.ql-snow{ border: none !important;}
+  

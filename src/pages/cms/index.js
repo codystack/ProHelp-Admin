@@ -19,6 +19,12 @@ import AddFAQForm from "forms/cms/add_faq";
 import Slide from '@mui/material/Slide'
 import AddSectionForm from "forms/cms/add_section";
 import SectionsTable from "examples/Tables/sections";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
+import './quill.css'
+import { useSelector } from "react-redux";
+import UpdatePrivacyPolicyForm from "forms/cms/set_privacy_policy";
+import SetTermsOfServiceForm from "forms/cms/set_terms";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,8 +66,18 @@ const Transition = React.forwardRef(function Transition (props, ref) {
 const CMS = () => {
   const [value, setValue] = React.useState(0);
   const [openFAQ, setOpenFAQ] = React.useState(false);
+  const [openTerms, setOpenTerms] = React.useState(false);
+  const [openPolicy, setOpenPolicy] = React.useState(false);
   const [openBanner, setOpenBanner] = React.useState(false);
   const [openSection, setOpenSection] = React.useState(false);
+
+  const  {legal} = useSelector((state) => state.legal)
+
+  const modules = {
+    toolbar: false
+  };
+
+  console.log("POLICY CONTENT ::: ", legal);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -127,6 +143,80 @@ const CMS = () => {
 
       <Dialog
         fullScreen
+        open={openPolicy}
+        onClose={() => setOpenPolicy(false)}
+        TransitionComponent={Transition}
+      >
+        <AppBar
+          sx={{ position: "relative", backgroundColor: "#18113c", color: "white" }}
+          color="secondary"
+        >
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => setOpenPolicy(false)}
+              aria-label="close"
+            >
+              <Close />
+            </IconButton>
+            <Typography
+              sx={{ ml: 2, flex: 1, textTransform: "capitalize",}}
+              variant="h6"
+              component="div"
+              color={"#fff"}
+            >
+              {'Update Website\'s Privacy Policy'}
+            </Typography>
+            <Button autoFocus color="inherit" onClick={() => setOpenPolicy(false)}>
+              Close
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <List>
+          <UpdatePrivacyPolicyForm setOpen={setOpenPolicy} data={legal} />
+        </List>
+      </Dialog>
+
+      <Dialog
+        fullScreen
+        open={openTerms}
+        onClose={() => setOpenTerms(false)}
+        TransitionComponent={Transition}
+      >
+        <AppBar
+          sx={{ position: "relative", backgroundColor: "#18113c", color: "white" }}
+          color="secondary"
+        >
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => setOpenTerms(false)}
+              aria-label="close"
+            >
+              <Close />
+            </IconButton>
+            <Typography
+              sx={{ ml: 2, flex: 1, textTransform: "capitalize",}}
+              variant="h6"
+              component="div"
+              color={"#fff"}
+            >
+              {'Update Website\'s Terms Of Service'}
+            </Typography>
+            <Button autoFocus color="inherit" onClick={() => setOpenTerms(false)}>
+              Close
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <List>
+          <SetTermsOfServiceForm setOpen={setOpenTerms} data={legal} />
+        </List>
+      </Dialog>
+
+      <Dialog
+        fullScreen
         open={openSection}
         onClose={() => setOpenSection(false)}
         TransitionComponent={Transition}
@@ -172,7 +262,9 @@ const CMS = () => {
           >
             <Tab label="Banners" {...a11yProps(0)} />
             <Tab label="Sections" {...a11yProps(1)} />
-            <Tab label="Frequently Asked Questions" {...a11yProps(2)} />
+            <Tab label="Privacy Policy" {...a11yProps(2)} />
+            <Tab label="Terms Of Use" {...a11yProps(3)} />
+            <Tab label="Frequently Asked Questions" {...a11yProps(4)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -234,6 +326,64 @@ const CMS = () => {
           </Box>
         </TabPanel>
         <TabPanel value={value} index={2}>
+          <Box
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"start"}
+            alignItems={"start"}
+          >
+            <Box
+              pb={2}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <Typography>Privacy Policy</Typography>
+              <SoftButton
+                startIcon={<Add />}
+                variant="contained"
+                onClick={() => setOpenPolicy(true)}
+                sx={{ textTransform: "capitalize", color: "white" }}
+              >
+                Update Policy
+              </SoftButton>
+            </Box>
+            <ReactQuill readOnly={true} value={legal?.privacy}  modules={modules} style={{ border: 'none' }} />
+          </Box>
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          <Box
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"start"}
+            alignItems={"start"}
+          >
+            <Box
+              pb={2}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <Typography>Terms Of Service</Typography>
+              <SoftButton
+                startIcon={<Add />}
+                variant="contained"
+                onClick={() => setOpenTerms(true)}
+                sx={{ textTransform: "capitalize", color: "white" }}
+              >
+                Update Terms Of Use
+              </SoftButton>
+            </Box>
+            <ReactQuill readOnly={true} value={legal?.terms}  modules={modules} style={{ border: 'none' }} />
+          </Box>
+        </TabPanel>
+        <TabPanel value={value} index={4}>
           <Box
             width={"100%"}
             display={"flex"}

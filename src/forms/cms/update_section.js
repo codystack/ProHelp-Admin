@@ -25,7 +25,6 @@ import {
 import APIService from "service";
 import { mutate } from "swr";
 import toast from "react-hot-toast";
-import { setBanners } from "redux/slices/cms";
 import { TestimonialBox } from "./add_section";
 import QuillEditable from "components/richtext/edit_quill";
 
@@ -69,7 +68,7 @@ export default function UpdateSectionForm({ setOpen, data }) {
   });
 
   const pages = ["home", "explore", "faq"];
-  const templates = ["call to action", "full-flex", "oxygen", "testimonial"];
+  const templates = ["call to action", "full-flex", "oxygen",];
 
   const uploadFile = (file) => {
     const storageRef = ref(
@@ -126,7 +125,7 @@ export default function UpdateSectionForm({ setOpen, data }) {
                     excerpt: values.excerpt,
                     featuredAsset: downloadURL,
                     template: values.template,
-                    content: content,
+                    content: mcontent,
                   };
 
                   console.log("PAYLOAD HERE:: ", payload);
@@ -160,56 +159,7 @@ export default function UpdateSectionForm({ setOpen, data }) {
         else if (values.template === "testimonial") {
           if (!testimonials) {
             toast.error("Testimonial data are required!");
-          } else {
-            // const copyOfTestimonial = testimonials;
-            // const allFiles = copyOfTestimonial?.map((item) => {
-            //   return {
-            //     file: item.file,
-            //   };
-            // });
-
-            // console.log("FILTERED :: ", allFiles);
-            // console.log("FILTERED FILES :: ", testimonials);
-
-            // uploadMultipleFiles(allFiles)
-            //   .then(async (downloadUrls) => {
-            //     console.log("PROMISE RESULT :: ", downloadUrls);
-
-            //     const testimonialsData = downloadUrls?.map((item, index) => {
-            //       return {
-            //         name: testimonials[index]?.name,
-            //         image: item,
-            //         message: testimonials[index]?.message,
-            //       };
-            //     });
-
-            //     const payload = {
-            //       page: values.page,
-            //       title: values.title,
-            //       excerpt: values.excerpt,
-            //       featuredImage: downloadUrls,
-            //       template: values.template,
-            //       content: content,
-            //       testimonials: testimonialsData,
-            //     };
-
-            //     const response = await APIService.post(
-            //       "/cms/sections/add/",
-            //       payload
-            //     );
-
-            //     console.log("RESP HERE >>> ", `${response}`);
-            //     mutate("/sections/all/");
-            //     setOpen(false);
-            //     const resp = await APIService.fetcher("/sections/all/");
-            //     dispatch(setLoading(false));
-            //     dispatch(setSections(resp?.docs));
-            //   })
-            //   .catch((error) => {
-            //     console.log(error);
-            //     dispatch(setLoading(false));
-            //   });
-          }
+          } 
         }
         else  {
           const payload = {
@@ -218,7 +168,7 @@ export default function UpdateSectionForm({ setOpen, data }) {
             title: values.title,
             excerpt: values.excerpt,
             template: values.template,
-            content: content,
+            content: mcontent,
           };
 
           console.log("PAYLOAD HERE:: ", payload);
@@ -412,6 +362,7 @@ export default function UpdateSectionForm({ setOpen, data }) {
         <Typography>Content</Typography>
         <QuillEditable
           value={mcontent}
+          setValue={setContent}
           placeholder={"Enter the content here"}
         />
       </Box>

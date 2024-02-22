@@ -127,7 +127,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     e.preventDefault();
     try {
       dispatcher(setLoading(true));
-      const response = APIService.post("/admin/logout", {});
+      const response = await APIService.post("/admin/logout", {});
 
       toast.promise(response, {
         loading: "Loading",

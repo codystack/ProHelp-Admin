@@ -60,7 +60,6 @@ const ActionButton = ({ selected }) => {
   const openAction = Boolean(anchorEl)
   //   const { enqueueSnackbar } = useSnackbar();
   const { profileData } = useSelector(state => state.profile)
-  const handleMoreAction = e => setAnchorEl(e.currentTarget)
 
   const handleDelete = async () => {
     try {

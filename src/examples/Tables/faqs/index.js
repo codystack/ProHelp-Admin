@@ -30,7 +30,7 @@ export default function FAQsTable() {
     {
       field: "question",
       headerName: "Question",
-      width: 400,
+      width: 256,
     },
     {
       field: "answer",
