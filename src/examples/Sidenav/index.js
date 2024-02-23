@@ -1,81 +1,81 @@
-import { useEffect } from "react";
+import { useEffect } from 'react'
 
 // react-router-dom components
-import { useLocation, NavLink, useNavigate } from "react-router-dom";
+import { useLocation, NavLink, useNavigate } from 'react-router-dom'
 
 // prop-types is a library for typechecking of props.
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 
 // @mui material components
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import Link from "@mui/material/Link";
-import Icon from "@mui/material/Icon";
+import List from '@mui/material/List'
+import Divider from '@mui/material/Divider'
+import Link from '@mui/material/Link'
+import Icon from '@mui/material/Icon'
 
 // Soft UI Dashboard React components
-import SoftBox from "components/SoftBox";
-import SoftTypography from "components/SoftTypography";
-import SoftButton from "components/SoftButton";
+import SoftBox from 'components/SoftBox'
+import SoftTypography from 'components/SoftTypography'
+import SoftButton from 'components/SoftButton'
 
 // Soft UI Dashboard React examples
-import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
-import SidenavCard from "examples/Sidenav/SidenavCard";
+import SidenavCollapse from 'examples/Sidenav/SidenavCollapse'
+import SidenavCard from 'examples/Sidenav/SidenavCard'
 
 // Custom styles for the Sidenav
-import SidenavRoot from "examples/Sidenav/SidenavRoot";
-import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
+import SidenavRoot from 'examples/Sidenav/SidenavRoot'
+import sidenavLogoLabel from 'examples/Sidenav/styles/sidenav'
 
 // Soft UI Dashboard React context
-import { useSoftUIController, setMiniSidenav } from "context";
-import APIService from "service";
-import { toast } from "react-hot-toast";
+import { useSoftUIController, setMiniSidenav } from 'context'
+import APIService from 'service'
+import { toast } from 'react-hot-toast'
 
-import { useDispatch } from "react-redux";
-import { setAuth, setProfile } from "../../redux/slices/profile";
-import { setLoading } from "redux/slices/backdrop";
+import { useDispatch } from 'react-redux'
+import { setAuth, setProfile } from '../../redux/slices/profile'
+import { setLoading } from 'redux/slices/backdrop'
 
-function Sidenav({ color, brand, brandName, routes, ...rest }) {
-  const [controller, dispatch] = useSoftUIController();
-  const { miniSidenav, transparentSidenav } = controller;
-  const location = useLocation();
-  const dispatcher = useDispatch();
-  const navigate = useNavigate();
-  const { pathname } = location;
-  const collapseName = pathname.split("/").slice(1)[0];
+function Sidenav ({ color, brand, brandName, routes, ...rest }) {
+  const [controller, dispatch] = useSoftUIController()
+  const { miniSidenav, transparentSidenav } = controller
+  const location = useLocation()
+  const dispatcher = useDispatch()
+  const navigate = useNavigate()
+  const { pathname } = location
+  const collapseName = pathname.split('/').slice(1)[0]
 
-  const closeSidenav = () => setMiniSidenav(dispatch, true);
+  const closeSidenav = () => setMiniSidenav(dispatch, true)
 
   useEffect(() => {
     // A function that sets the mini state of the sidenav.
-    function handleMiniSidenav() {
-      setMiniSidenav(dispatch, window.innerWidth < 1200);
+    function handleMiniSidenav () {
+      setMiniSidenav(dispatch, window.innerWidth < 1200)
     }
 
     /** 
      The event listener that's calling the handleMiniSidenav function when resizing the window.
     */
-    window.addEventListener("resize", handleMiniSidenav);
+    window.addEventListener('resize', handleMiniSidenav)
 
     // Call the handleMiniSidenav function to set the state with the initial value.
-    handleMiniSidenav();
+    handleMiniSidenav()
 
     // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleMiniSidenav);
-  }, [dispatch, location]);
+    return () => window.removeEventListener('resize', handleMiniSidenav)
+  }, [dispatch, location])
 
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
   const renderRoutes = routes.map(
     ({ type, name, icon, title, noCollapse, key, route, href }) => {
-      let returnValue;
+      let returnValue
 
-      if (type === "collapse") {
+      if (type === 'collapse') {
         returnValue = href ? (
           <Link
             href={href}
-            key={key} 
-            target="_blank"
-            rel="noreferrer"
-            sx={{ textDecoration: "none" }}
+            key={key}
+            target='_blank'
+            rel='noreferrer'
+            sx={{ textDecoration: 'none' }}
           >
             <SidenavCollapse
               color={color}
@@ -96,101 +96,104 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
               noCollapse={noCollapse}
             />
           </NavLink>
-        );
-      } else if (type === "title") {
+        )
+      } else if (type === 'title') {
         returnValue = (
           <SoftTypography
             key={key}
-            display="block"
-            variant="caption"
-            fontWeight="bold"
-            textTransform="uppercase"
+            display='block'
+            variant='caption'
+            fontWeight='bold'
+            textTransform='uppercase'
             opacity={0.6}
             pl={3}
             mt={2}
             mb={1}
             ml={1}
-            sx={{ color: "#f1f3f4" }}
+            sx={{ color: '#f1f3f4' }}
           >
             {title}
           </SoftTypography>
-        );
-      } else if (type === "divider") {
-        returnValue = <Divider key={key} />;
+        )
+      } else if (type === 'divider') {
+        returnValue = <Divider key={key} />
       }
 
-      return returnValue;
+      return returnValue
     }
-  );
+  )
 
-  const logout = async (e) => {
-    e.preventDefault();
+  const logout = async e => {
+    e.preventDefault()
     try {
-      dispatcher(setLoading(true));
-      const response = await APIService.post("/admin/logout", {});
+      dispatcher(setLoading(true))
+      // const response = await APIService.post("/admin/logout", {});
 
-      toast.promise(response, {
-        loading: "Loading",
-        success: (res) => {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
+      setTimeout(() => {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
 
-          dispatcher(setLoading(false));
-          dispatcher(setAuth(false));
-          dispatcher(setProfile(null));
+        dispatcher(setLoading(false))
+        dispatcher(setAuth(false))
+        dispatcher(setProfile(null))
 
-          //Now route to login
-          navigate("/login", {
-            replace: true,
-          });
+        //Now route to login
+        navigate('/login', {
+          replace: true
+        })
+      }, 3000)
 
-          return `Login to continue`;
-        },
-        error: (err) => {
-          console.log("ERROR HERE >>> ", `${err}`);
-          dispatcher(setLoading(false));
-          return (
-            err?.response?.data?.message ||
-            err?.message ||
-            "Something went wrong, try again."
-          );
-        },
-      });
+      // toast.promise(response, {
+      //   loading: "Loading",
+      //   success: (res) => {
+
+      //     return `Login to continue`;
+      //   },
+      //   error: (err) => {
+      //     console.log("ERROR HERE >>> ", `${err}`);
+      //     dispatcher(setLoading(false));
+      //     return (
+      //       err?.response?.data?.message ||
+      //       err?.message ||
+      //       "Something went wrong, try again."
+      //     );
+      //   },
+      // });
     } catch (error) {
-      dispatcher(setLoading(false));
-      console.log("ERROR => ", error);
+      dispatcher(setLoading(false))
+      console.log('ERROR => ', error)
     }
-  };
+  }
 
   return (
-    <SidenavRoot {...rest} variant="permanent" ownerState={{ miniSidenav }}>
-      <SoftBox pt={3} pb={1} px={4} textAlign="center">
+    <SidenavRoot {...rest} variant='permanent' ownerState={{ miniSidenav }}>
+      <SoftBox pt={3} pb={1} px={4} textAlign='center'>
         <SoftBox
-          display={{ xs: "block", xl: "none" }}
-          position="absolute"
+          display={{ xs: 'block', xl: 'none' }}
+          position='absolute'
           top={0}
           right={0}
           p={1.625}
           onClick={closeSidenav}
-          sx={{ cursor: "pointer" }}
+          sx={{ cursor: 'pointer' }}
         >
-          <SoftTypography variant="h6" color="secondary">
-            <Icon sx={{ fontWeight: "bold" }}>close</Icon>
+          <SoftTypography variant='h6' color='secondary'>
+            <Icon sx={{ fontWeight: 'bold' }}>close</Icon>
           </SoftTypography>
         </SoftBox>
         <SoftBox
           component={NavLink}
-          to="/"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
+          to='/'
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
         >
           {brand && (
             <SoftBox
-              component="img"
+              component='img'
               src={brand}
-              alt="Soft UI Logo"
-              width="25%"
+              alt='Soft UI Logo'
+              width='25%'
             />
           )}
           {/* <SoftBox
@@ -201,27 +204,27 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           </SoftBox> */}
           <SoftTypography
             style={{ marginLeft: 10, color: 'white' }}
-            component="h1"
-            fontWeight="medium"
+            component='h1'
+            fontWeight='medium'
           >
-            {"ProHelp"}
+            {'ProHelp'}
           </SoftTypography>
         </SoftBox>
       </SoftBox>
       <Divider />
-      <List sx={{ background: "#0066F5", borderRadius: 2 }}>
+      <List sx={{ background: '#0066F5', borderRadius: 2 }}>
         {renderRoutes}
       </List>
-      <SoftBox pt={2} my={2} mx={2} mt="auto">
+      <SoftBox pt={2} my={2} mx={2} mt='auto'>
         {/* <SidenavCard /> */}
         <SoftBox mt={2}>
           <SoftButton
-            component="button"
+            component='button'
             // href="https://creative-tim.com/product/soft-ui-dashboard-pro-react"
             // target="_blank"
             // rel="noreferrer"
-            variant="gradient"
-            color={"white"}
+            variant='gradient'
+            color={'white'}
             fullWidth
             onClick={logout}
           >
@@ -230,29 +233,29 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         </SoftBox>
       </SoftBox>
     </SidenavRoot>
-  );
+  )
 }
 
 // Setting default values for the props of Sidenav
 Sidenav.defaultProps = {
-  color: "info",
-  brand: "",
-};
+  color: 'info',
+  brand: ''
+}
 
 // Typechecking props for the Sidenav
 Sidenav.propTypes = {
   color: PropTypes.oneOf([
-    "primary",
-    "secondary",
-    "info",
-    "success",
-    "warning",
-    "error",
-    "dark",
+    'primary',
+    'secondary',
+    'info',
+    'success',
+    'warning',
+    'error',
+    'dark'
   ]),
   brand: PropTypes.string,
   brandName: PropTypes.string.isRequired,
-  routes: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
+  routes: PropTypes.arrayOf(PropTypes.object).isRequired
+}
 
-export default Sidenav;
+export default Sidenav
