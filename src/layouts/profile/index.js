@@ -35,7 +35,7 @@ function Overview() {
                     First Name
                   </Typography>
                   <SoftTypography textTransform="capitalize" variant="body2">
-                    {profileData?.bio?.firstname || profileData?.bio?.fullname.toString().split(' ')[0]}
+                    {profileData?.bio?.firstname || profileData?.bio?.fullname?.toString().split(' ')[0]}
                   </SoftTypography>
                 </SoftBox>
               </Grid>
@@ -45,7 +45,7 @@ function Overview() {
                     Last Name
                   </Typography>
                   <SoftTypography textTransform="capitalize" variant="body2">
-                    {profileData?.bio?.lastname || profileData?.bio?.fullname.toString().split(' ')[1]}
+                    {profileData?.bio?.lastname || profileData?.bio?.fullname?.toString().split(' ')[1]}
                   </SoftTypography>
                 </SoftBox>
               </Grid>
