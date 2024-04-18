@@ -7,7 +7,6 @@ import Button from '@mui/material/Button'
 
 // import { useSnackbar } from "notistack";
 import { useDispatch, useSelector } from 'react-redux'
-import { makeStyles } from '@mui/styles'
 import { setLoading } from '../../../redux/slices/backdrop'
 import { PropTypes } from 'prop-types'
 import SoftBox from 'components/SoftBox'
@@ -23,27 +22,11 @@ import { mutate } from 'swr'
 import UpdateFAQForm from 'forms/cms/update_faq'
 import { setFAQs } from 'redux/slices/cms'
 
-const useStyles = makeStyles(theme => ({
-  awardRoot: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  awardRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginLeft: 'auto'
-  },
-  button: {
-    margin: theme.spacing(1)
-  }
-}))
-
 const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
 })
 
 const ActionButton = ({ selected }) => {
-  const classes = useStyles()
   const dispatch = useDispatch()
 
   // const [open, setOpen] = React.useState(false);

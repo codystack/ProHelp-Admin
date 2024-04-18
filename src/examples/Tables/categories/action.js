@@ -8,9 +8,7 @@ import Button from "@mui/material/Button";
 
 // import { useSnackbar } from "notistack";
 import { useDispatch, useSelector } from "react-redux";
-import { makeStyles } from "@mui/styles";
 import { setLoading } from "../../../redux/slices/backdrop";
-import Box from "@mui/system/Box";
 import { PropTypes } from "prop-types";
 import SoftBox from "components/SoftBox";
 import {
@@ -31,33 +29,15 @@ import Preview from "./preview";
 import APIService from "service";
 import { toast } from "react-hot-toast";
 import { mutate } from "swr";
-import SoftInput from "components/SoftInput";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import UpdateCategoryForm from "forms/category/update_category";
 import SoftButton from "components/SoftButton";
 
-const useStyles = makeStyles((theme) => ({
-  awardRoot: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  awardRow: {
-    display: "flex",
-    flexDirection: "row",
-    marginLeft: "auto",
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-}));
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const ActionButton = ({ selected }) => {
-  const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);

@@ -6,15 +6,11 @@ import {
   Box,
   Button,
   Card,
-  CardMedia,
   FormControl,
   FormHelperText,
   Grid,
   IconButton,
-  InputLabel,
-  MenuItem,
   NativeSelect,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -34,9 +30,10 @@ import oxygenPreview from "../../assets/images/oxygen.png";
 import ctaPreview from "../../assets/images/cta.png";
 import fullFlexPreview from "../../assets/images/full-flex.png";
 import testimonialPreview from "../../assets/images/testimoni_img.gif";
-import QuillEditor from "components/richtext/quill";
+// import QuillEditor from "components/richtext/quill";
 import { setSections } from "redux/slices/cms";
 import QuillEditable from "components/richtext/edit_quill";
+import theme from "assets/theme";
 // import SoftButton from "components/SoftButton";
 // import { outlined } from "assets/theme/components/button/outlined";
 // import SoftAvatar from "components/SoftAvatar";
@@ -69,10 +66,10 @@ export default function AddSectionForm({ setOpen }) {
       "sections/testimonials/" + new Date().getTime()
     );
     const uploadTask = uploadBytesResumable(storageRef, file?.file);
-    
+
     return uploadTask.then((res) => getDownloadURL(storageRef));
   };
- 
+
   // Function to handle multiple file uploads using Promise.all
   const uploadMultipleFiles = (files) => {
     const uploadPromises = files.map(uploadFile);
@@ -89,14 +86,12 @@ export default function AddSectionForm({ setOpen }) {
     },
     // validationSchema,
     onSubmit: async (values) => {
-     
       dispatch(setLoading(true));
       try {
         if (values.template === "full-flex") {
           if (!mfile) {
             toast.error("Featured Image is required!");
           } else {
-
             console.log("FILE  !!!", mfile);
             // Send image to Firebase storage first
             const timeNow = new Date().getTime();
@@ -226,7 +221,6 @@ export default function AddSectionForm({ setOpen }) {
           const resp = await APIService.fetcher("/sections/all/");
           dispatch(setLoading(false));
           dispatch(setSections(resp?.docs));
-
         }
       } catch (error) {
         toast.error("Page already");
@@ -317,11 +311,10 @@ export default function AddSectionForm({ setOpen }) {
               defaultValue={formik.values.page}
               disableUnderline
               variant="outlined"
-              onChange={formik.handleChange('page')}
+              onChange={formik.handleChange("page")}
               required
               fullWidth
               value={formik.values.page}
-              
               sx={{ textTransform: "capitalize" }}
               inputProps={{
                 name: "page",
@@ -399,10 +392,18 @@ export default function AddSectionForm({ setOpen }) {
 
       <Box width={"97vw"} minHeight={200}>
         <Typography>Content</Typography>
-        <QuillEditable
-          setValue={setContent}
-          placeholder={"Enter the content here"}
-        />
+        <Box
+          sx={{
+            borderLeft: `1px solid #ccc`,
+            borderRight: "1px solid #ccc",
+            borderBottom: `1px solid #ccc`,
+          }}
+        >
+          <QuillEditable
+            setValue={setContent}
+            placeholder={"Enter the content here"}
+          />
+        </Box>
       </Box>
 
       <br />
@@ -431,7 +432,12 @@ export default function AddSectionForm({ setOpen }) {
   );
 }
 
-export const AvatrBox = ({ pickerRef, previewImage, setPreviewImage, setMFile }) => {
+export const AvatrBox = ({
+  pickerRef,
+  previewImage,
+  setPreviewImage,
+  setMFile,
+}) => {
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
     if (file) {

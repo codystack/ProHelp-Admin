@@ -6,9 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-// import { useSnackbar } from "notistack";
 import { useDispatch, useSelector } from "react-redux";
-import { makeStyles } from "@mui/styles";
 import { setLoading } from "../../../redux/slices/backdrop";
 import { PropTypes } from "prop-types";
 import SoftBox from "components/SoftBox";
@@ -31,34 +29,17 @@ import APIService from "service";
 import { toast } from "react-hot-toast";
 import { mutate } from "swr";
 
-const useStyles = makeStyles((theme) => ({
-  awardRoot: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  awardRow: {
-    display: "flex",
-    flexDirection: "row",
-    marginLeft: "auto",
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-}));
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const ActionButton = ({ selected }) => {
-  const classes = useStyles();
-
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  //   const [openEdit, setOpenEdit] = React.useState(false);
-  const [openDelete, setOpenDelete] = React.useState(false);
+  const [verifyType, setVerifyType] = React.useState("");
 
   const [openConfirm, setOpenConfirm] = React.useState(false);
+  const [openConfirmVerify, setOpenConfirmVerify] = React.useState(false);
   const [menu, setMenu] = React.useState(null);
   const dispatch = useDispatch();
 
@@ -68,7 +49,6 @@ const ActionButton = ({ selected }) => {
   const openAction = Boolean(anchorEl);
   //   const { enqueueSnackbar } = useSnackbar();
   const { profileData } = useSelector((state) => state.profile);
-
 
   const handleClickOpen = () => {
     closeMenu();
@@ -96,11 +76,54 @@ const ActionButton = ({ selected }) => {
     >
       {profileData && profileData?.privilege?.access === "read/write" && (
         <div>
-          
           {selected?.row?.accountStatus !== "frozen" ? (
             <MenuItem onClick={handleClickOpen}>{`Freeze Account`}</MenuItem>
           ) : (
             <MenuItem onClick={handleClickOpen}>{`Unfreeze Account`}</MenuItem>
+          )}
+          {!selected?.row?.isGuarantorVerified && (
+            <MenuItem
+              onClick={() => {
+                closeMenu();
+                setVerifyType("Guarantor");
+                setOpenConfirmVerify(true);
+              }}
+            >
+              {"Verify Guarantor"}
+            </MenuItem>
+          )}
+          {!selected?.row?.isAddressVerified && (
+            <MenuItem
+              onClick={() => {
+                closeMenu();
+                setVerifyType("House Address");
+                setOpenConfirmVerify(true);
+              }}
+            >
+              {"Verify House Address"}
+            </MenuItem>
+          )}
+          {!selected?.row?.isPoliceCleared && (
+            <MenuItem
+              onClick={() => {
+                closeMenu();
+                setVerifyType("Police Clearance");
+                setOpenConfirmVerify(true);
+              }}
+            >
+              {"Verify Police Clearance"}
+            </MenuItem>
+          )}
+          {!selected?.row?.isPreviousWorkAddressVerified && (
+            <MenuItem
+              onClick={() => {
+                closeMenu();
+                setVerifyType("Previous Work Information");
+                setOpenConfirmVerify(true);
+              }}
+            >
+              {"Verify Prev Work Address"}
+            </MenuItem>
           )}
         </div>
       )}
@@ -134,7 +157,11 @@ const ActionButton = ({ selected }) => {
         error: (err) => {
           console.log("ERROR HERE >>> ", `${err}`);
           dispatch(setLoading(false));
-          return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
+          return (
+            err?.response?.data?.message ||
+            err?.message ||
+            "Something went wrong, try again."
+          );
         },
       });
     } catch (error) {
@@ -149,7 +176,9 @@ const ActionButton = ({ selected }) => {
     const payload = {
       ...selected?.row,
       accountStatus:
-        selected?.row?.isEmailVerified && selected?.row?.isPhoneVerified ? "verified" : "pending",
+        selected?.row?.isEmailVerified && selected?.row?.isPhoneVerified
+          ? "verified"
+          : "pending",
     };
 
     try {
@@ -165,7 +194,11 @@ const ActionButton = ({ selected }) => {
         error: (err) => {
           console.log("ERROR HERE >>> ", `${err}`);
           dispatch(setLoading(false));
-          return err?.response?.data?.message || err?.message || "Something went wrong, try again.";
+          return (
+            err?.response?.data?.message ||
+            err?.message ||
+            "Something went wrong, try again."
+          );
         },
       });
     } catch (error) {
@@ -174,10 +207,74 @@ const ActionButton = ({ selected }) => {
     }
   };
 
+  const verifier = () => {
+    // admin/users/update
+    setOpenConfirmVerify(false);
+    dispatch(setLoading(true));
+    let payload = null;
+    if (verifyType.includes('Guarantor')) {
+      payload = {
+        ...selected?.row,
+        isGuarantorVerified: true,
+        profileCompleteness: selected?.row?.profileCompleteness + 10
+      };
+    } else if (verifyType.includes('Police')) {
+      payload = {
+        ...selected?.row,
+        isPoliceCleared: true,
+        profileCompleteness: selected?.row?.profileCompleteness + 15
+      };
+    }
+    else if (verifyType.includes('House Address')) {
+      payload = {
+        ...selected?.row,
+        isAddressVerified: true,
+        profileCompleteness: selected?.row?.profileCompleteness + 20
+      };
+    }
+    else if (verifyType.includes('Prev Work')) {
+      payload = {
+        ...selected?.row,
+        isPreviousWorkAddressVerified: true,
+        profileCompleteness: selected?.row?.profileCompleteness + 10
+      };
+    }
+    
+
+    try {
+      let response = APIService.update("/admin/users/update", "", payload);
+
+      toast.promise(response, {
+        loading: "Loading",
+        success: (res) => {
+          dispatch(setLoading(false));
+          mutate("/admin/users/all");
+          return `User account successfully updated`;
+        },
+        error: (err) => {
+          console.log("ERROR HERE >>> ", `${err}`);
+          dispatch(setLoading(false));
+          return (
+            err?.response?.data?.message ||
+            err?.message ||
+            "Something went wrong, try again."
+          );
+        },
+      });
+    } catch (error) {
+      dispatch(setLoading(false));
+      console.log("ERROR ASYNC HERE >>> ", `${error}`);
+    }
+  }
+
   return (
     <>
       <SoftBox color="text" px={2}>
-        <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
+        <Icon
+          sx={{ cursor: "pointer", fontWeight: "bold" }}
+          fontSize="small"
+          onClick={openMenu}
+        >
           more_vert
         </Icon>
       </SoftBox>
@@ -190,10 +287,15 @@ const ActionButton = ({ selected }) => {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>
-          {selected?.row?.accountStatus === "frozen" ? "Unfree Account" : "Freeze Account"}
+          {selected?.row?.accountStatus === "frozen"
+            ? "Unfree Account"
+            : "Freeze Account"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description" sx={{ fontSize: 14 }}>
+          <DialogContentText
+            id="alert-dialog-slide-description"
+            sx={{ fontSize: 14 }}
+          >
             {`${
               selected?.row?.accountStatus === "frozen"
                 ? `Are you sure you want to unfreeze ${selected?.row?.bio?.firstname} ${selected?.row?.bio?.lastname}'s account?`
@@ -204,13 +306,48 @@ const ActionButton = ({ selected }) => {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button
-            onClick={selected?.row?.accountStatus === "frozen" ? unfreezeAccount : freezeAccount}
+            onClick={
+              selected?.row?.accountStatus === "frozen"
+                ? unfreezeAccount
+                : freezeAccount
+            }
           >
             Yes, proceed
           </Button>
         </DialogActions>
       </Dialog>
 
+      <Dialog
+        open={openConfirmVerify}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={() => setOpenConfirmVerify(false)}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{`Verify ${verifyType}`}</DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            id="alert-dialog-slide-description"
+            sx={{ fontSize: 14 }}
+          >
+            {`${`Are you sure you want to verify ${
+              selected?.row?.bio?.firstname
+            } ${selected?.row?.bio?.lastname}'s ${verifyType} and mark as ${
+              verifyType.includes("Police") ? "'CLEARED'" : "'VERIFIED'"
+            }?`}`}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenConfirmVerify(false)}>Cancel</Button>
+          <Button
+            onClick={
+              verifier
+            }
+          >
+            Yes, proceed
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog
         fullScreen
@@ -218,7 +355,14 @@ const ActionButton = ({ selected }) => {
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: "relative", backgroundColor: "#18113c", color: "white" }} color="secondary">
+        <AppBar
+          sx={{
+            position: "relative",
+            backgroundColor: "#18113c",
+            color: "white",
+          }}
+          color="secondary"
+        >
           <Toolbar>
             <IconButton
               edge="start"
@@ -247,7 +391,6 @@ const ActionButton = ({ selected }) => {
       </Dialog>
     </>
   );
-
 };
 
 // Typechecking props for the ActionButton

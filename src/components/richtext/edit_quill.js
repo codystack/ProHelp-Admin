@@ -119,56 +119,6 @@ const QuillEditable = ({ value, setValue }) => {
   );
 };
 
-// class QuillEditable extends React.Component {
-//   state = { editorHtml: "" };
 
-//   handleChange = (html) => {
-//     this.setState({ editorHtml: html });
-//     this.props.setValue(html);
-//     // console.log("ASDE", this.state.editorHtml);
-//   };
-
-//   static modules = {
-//     toolbar: {
-//       container: "#toolbar",
-//       handlers: {
-//         insertHeart: insertHeart,
-//       },
-//     },
-//   };
-
-//   static formats = [
-//     "header",
-//     "font",
-//     "size",
-//     "bold",
-//     "italic",
-//     "underline",
-//     "strike",
-//     "blockquote",
-//     "list",
-//     "bullet",
-//     "indent",
-//     "link",
-//     "image",
-//     "color",
-//   ];
-
-//   render() { 
-//     return (
-//       <div className="text-editor" style={{width: '100%', flex: 1}} >
-//         <CustomToolbar />
-//         <ReactQuill
-//           theme="snow"
-//           defaultValue={this.props.value}
-//           onChange={this.handleChange}
-//           modules={QuillEditable.modules}
-//           formats={QuillEditable.formats}
-          
-//         />
-//       </div>
-//     );
-//   }
-// }
 
 export default QuillEditable;

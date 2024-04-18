@@ -63,18 +63,27 @@ export default function SetTermsOfServiceForm ({ setOpen, data }) {
       alignItems={'center'}
     >
       <Typography>Terms Of Service (ToS)</Typography>
-      <QuillEditable
-        value={mcontent}
-        setValue={setContent}
-        placeholder={'Enter the content here'}
-      />
+      <Box
+        width={"86%"}
+        sx={{
+          borderLeft: `1px solid #ccc`,
+          borderRight: "1px solid #ccc",
+          borderBottom: `1px solid #ccc`,
+        }}
+      >
+        <QuillEditable
+          value={mcontent}
+          setValue={setContent}
+          placeholder={"Enter the content here"}
+        />
+      </Box>
 
       <br />
       <Button
         variant='contained'
         fullWidth
         disabled={isLoading}
-        sx={{ textTransform: 'capitalize' }}
+        sx={{ textTransform: 'capitalize', width: "86%" }}
         onClick={() => handleSubmit()}
       >
         Submit

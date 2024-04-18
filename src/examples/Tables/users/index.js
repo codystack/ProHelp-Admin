@@ -334,7 +334,7 @@ export default function UsersTable() {
           size="small"
           sx={{ textTransform: "capitalize" }}
           label={params?.row?.accountStatus}
-          color={params?.row?.accountStatus !== "active" ? "warning" : "success"}
+          color={params?.row?.accountStatus !== "active" ? "error" : "success"}
         />
       ),
     },

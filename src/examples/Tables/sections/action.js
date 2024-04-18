@@ -5,59 +5,32 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 
-// import { useSnackbar } from "notistack";
 import { useDispatch, useSelector } from 'react-redux'
-import { makeStyles } from '@mui/styles'
 import { setLoading } from '../../../redux/slices/backdrop'
 import { PropTypes } from 'prop-types'
 import SoftBox from 'components/SoftBox'
 import {
   AppBar,
-  Avatar,
   Box,
   Dialog,
-  DialogActions,
-  DialogContent,
-  Divider,
-  Grid,
   Icon,
   List,
-  ListItem,
   Toolbar
 } from '@mui/material'
 
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
 import Slide from '@mui/material/Slide'
 import { Close } from '@mui/icons-material'
-import Preview from './preview'
 import APIService from 'service'
-import { toast } from 'react-hot-toast'
 import { mutate } from 'swr'
-import UpdateBannerForm from 'forms/cms/update_banner'
 import UpdateSectionForm from 'forms/cms/update_section'
 
-const useStyles = makeStyles(theme => ({
-  awardRoot: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  awardRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginLeft: 'auto'
-  },
-  button: {
-    margin: theme.spacing(1)
-  }
-}))
+
 
 const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
 })
 
 const ActionButton = ({ selected }) => {
-  const classes = useStyles()
   const dispatch = useDispatch()
 
   // const [open, setOpen] = React.useState(false);

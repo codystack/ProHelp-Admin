@@ -1,85 +1,94 @@
-import React from 'react'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import { Box, Button, Typography } from '@mui/material'
-import { useDispatch, useSelector } from 'react-redux'
-import { setLoading } from 'redux/slices/backdrop'
-import APIService from 'service'
-import toast from 'react-hot-toast'
-import QuillEditable from 'components/richtext/edit_quill'
-import { mutate } from 'swr'
+import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { Box, Button, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "redux/slices/backdrop";
+import APIService from "service";
+import toast from "react-hot-toast";
+import QuillEditable from "components/richtext/edit_quill";
+import { mutate } from "swr";
 
-export default function UpdatePrivacyPolicyForm ({ setOpen, data }) {
-  const dispatch = useDispatch()
-  const [mcontent, setContent] = React.useState(data?.privacy);
-  const profile = useSelector(state => state.profile.profileData)
-  const { id, privacy: policy } = data
+export default function UpdatePrivacyPolicyForm({ setOpen, data }) {
+  const dispatch = useDispatch();
+  const [mcontent, setContent] = React.useState(data?.privacy ?? "");
+  const profile = useSelector((state) => state.profile.profileData);
+  const { id, privacy: policy } = data;
 
   const validationSchema = Yup.object().shape({
-    policy: Yup.string().required('Privacy policy is required')
-  })
+    policy: Yup.string().required("Privacy policy is required"),
+  });
 
   const formik = useFormik({
     initialValues: {
-      policy: policy ?? ''
+      policy: policy ?? "",
     },
     validationSchema,
-    onSubmit: async values => {
-      dispatch(setLoading(true))
+    onSubmit: async (values) => {
+      dispatch(setLoading(true));
       try {
         const payload = {
           privacy: mcontent,
-          id: id
-        }
+          id: id,
+        };
 
-        console.log('PAYLOAD HERE:: ', payload)
+        console.log("PAYLOAD HERE:: ", payload);
 
         const res = await APIService.update(
-          '/legal/privacy/update',
-          '',
+          "/legal/privacy/update",
+          "",
           payload
-        )
+        );
 
-        console.log('RESP HERE >>> ', `${res?.data}`)
+        console.log("RESP HERE >>> ", `${res?.data}`);
         mutate("/legal/all");
-        setOpen(false)
+        setOpen(false);
 
-        dispatch(setLoading(false))
+        dispatch(setLoading(false));
 
-        toast.success(`${res.data?.message}`)
+        toast.success(`${res.data?.message}`);
       } catch (error) {
-        toast.error(error?.message)
-        dispatch(setLoading(false))
+        toast.error(error?.message);
+        dispatch(setLoading(false));
       }
-    }
-  })
+    },
+  });
 
-  const { errors, getFieldProps, handleSubmit, touched } = formik
+  const { errors, getFieldProps, handleSubmit, touched } = formik;
 
   return (
     <Box
       p={2}
-      display={'flex'}
-      flexDirection={'column'}
-      justifyContent={'start'}
-      alignItems={'center'}
+      display={"flex"}
+      flexDirection={"column"}
+      justifyContent={"start"}
+      alignItems={"center"}
     >
       <Typography>Privacy Policy</Typography>
-      <QuillEditable
-        value={mcontent}
-        setValue={setContent}
-        placeholder={'Enter the content here'}
-      />
+      <Box
+        width={"86%"}
+        sx={{
+          borderLeft: `1px solid #ccc`,
+          borderRight: "1px solid #ccc",
+          borderBottom: `1px solid #ccc`,
+        }}
+      >
+        <QuillEditable
+          value={mcontent}
+          setValue={setContent}
+          placeholder={"Enter the content here"}
+        />
+      </Box>
 
       <br />
       <Button
-        variant='contained'
+        variant="contained"
         fullWidth
-        sx={{ textTransform: 'capitalize' }}
+        sx={{ textTransform: "capitalize", width: "86%" }}
         onClick={() => handleSubmit()}
       >
         Submit
       </Button>
     </Box>
-  )
+  );
 }
